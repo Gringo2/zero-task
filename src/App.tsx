@@ -1,7 +1,9 @@
 import './App.css';
 import { TaskForm } from './components/TaskForm';
 import { TaskList } from './components/TaskList';
+import { FilterBar, type FilterType } from './components/FilterBar';
 import { useTasks } from './hooks/useTasks';
+import { useState } from 'react';
 
 /**
  * Root Component (App)
@@ -12,7 +14,10 @@ import { useTasks } from './hooks/useTasks';
  */
 function App() {
   // Initialize State Hook
-  const { tasks, addTask, toggleTask, deleteTask } = useTasks();
+  const { tasks, addTask, toggleTask, deleteTask, updateTask } = useTasks();
+
+  // Filter state
+  const [filter, setFilter] = useState<FilterType>('all');
 
   return (
     <div className="app-container">
@@ -27,11 +32,16 @@ function App() {
         {/* Form to create new tasks */}
         <TaskForm onAdd={addTask} />
 
+        {/* Filter Controls */}
+        <FilterBar currentFilter={filter} onFilterChange={setFilter} />
+
         {/* List to display and manage existing tasks */}
         <TaskList
           tasks={tasks}
+          filter={filter}
           onToggle={toggleTask}
           onDelete={deleteTask}
+          onUpdate={updateTask}
         />
       </main>
 

@@ -1,11 +1,15 @@
 import type { TTask } from '../types/task';
+import { TaskStatus } from '../types/task';
 import { TaskItem } from './TaskItem';
+import type { FilterType } from './FilterBar';
 import './TaskList.css';
 
 interface TaskListProps {
     tasks: TTask[];
+    filter: FilterType;
     onToggle: (id: string) => void;
     onDelete: (id: string) => void;
+    onUpdate: (id: string, title: string, description: string) => void;
 }
 
 /**
@@ -14,9 +18,16 @@ interface TaskListProps {
  * Renders the list of tasks or an empty state message.
  * Acts as a pure presentational component.
  */
-export const TaskList = ({ tasks, onToggle, onDelete }: TaskListProps) => {
+export const TaskList = ({ tasks, filter, onToggle, onDelete, onUpdate }: TaskListProps) => {
+    // Filter tasks based on current filter
+    const filteredTasks = tasks.filter(task => {
+        if (filter === 'active') return task.status !== TaskStatus.COMPLETED;
+        if (filter === 'completed') return task.status === TaskStatus.COMPLETED;
+        return true; // 'all'
+    });
+
     // Render empty state if no tasks exist
-    if (tasks.length === 0) {
+    if (filteredTasks.length === 0) {
         return (
             <div className="empty-state">
                 <p>No tasks yet. Add one to get started!</p>
@@ -26,12 +37,13 @@ export const TaskList = ({ tasks, onToggle, onDelete }: TaskListProps) => {
 
     return (
         <div className="task-list">
-            {tasks.map(task => (
+            {filteredTasks.map(task => (
                 <TaskItem
                     key={task.id}
                     task={task}
                     onToggle={onToggle}
                     onDelete={onDelete}
+                    onUpdate={onUpdate}
                 />
             ))}
         </div>

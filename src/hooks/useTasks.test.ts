@@ -93,4 +93,21 @@ describe('useTasks Hook', () => {
         expect(result.current.tasks).toHaveLength(1);
         expect(result.current.tasks[0].title).toBe('Hydrated Task');
     });
+
+    it('should update a task title and description', () => {
+        const { result } = renderHook(() => useTasks());
+
+        act(() => {
+            result.current.addTask('Original Title', 'Original Description');
+        });
+
+        const taskId = result.current.tasks[0].id;
+
+        act(() => {
+            result.current.updateTask(taskId, 'Updated Title', 'Updated Description');
+        });
+
+        expect(result.current.tasks[0].title).toBe('Updated Title');
+        expect(result.current.tasks[0].description).toBe('Updated Description');
+    });
 });

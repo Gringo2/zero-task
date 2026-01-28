@@ -12,7 +12,7 @@ NOTE: Data lost on reload.
 --------------------------------------------------
 
 ID: task-2-alpha-persistence
-STATUS: COMPLETED (CURRENT)
+STATUS: COMPLETED
 COMMIT: 91c07ca
 DESCRIPTION: Implementation of data persistence.
 CHANGES:
@@ -21,3 +21,19 @@ CHANGES:
 - Auto-save on state change.
 EXPLANATION:
 Storage logic was added to bridge the gap between sessions. We chose localStorage for simplicity as it fits the "System Zero" requirement for client-side containment without needing a backend yet.
+
+--------------------------------------------------
+
+ID: task-3-assurance-testing
+STATUS: COMPLETED (CURRENT)
+COMMIT: 1e85c9e
+DESCRIPTION: Test infrastructure and verification.
+CHANGES:
+- Installed Vitest + React Testing Library + JSDOM.
+- Created vitest.config.ts and test setup.
+- Wrote 6 unit tests for useTasks hook.
+- Wrote 4 component tests for TaskForm.
+RESULTS:
+All 10 tests passed.
+EXPLANATION:
+Following System Zero doctrine (auditability), we established automated testing to ensure code correctness. Tests cover CRUD operations, persistence logic, form validation, and UI interaction.

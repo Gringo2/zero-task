@@ -75,10 +75,26 @@ export const useTasks = () => {
         setTasks(prev => prev.filter(task => task.id !== id));
     }, []);
 
+    /**
+     * Updates an existing task's title and description.
+     * 
+     * @param id - The UUID of the task to update
+     * @param title - New title
+     * @param description - New description
+     */
+    const updateTask = useCallback((id: string, title: string, description: string) => {
+        setTasks(prev => prev.map(task =>
+            task.id === id
+                ? { ...task, title, description }
+                : task
+        ));
+    }, []);
+
     return {
         tasks,
         addTask,
         toggleTask,
         deleteTask,
+        updateTask,
     };
 };
