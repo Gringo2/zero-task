@@ -13,6 +13,7 @@ NOTE: Data lost on reload.
 
 ID: task-2-alpha-persistence
 STATUS: COMPLETED (CURRENT)
+COMMIT: 91c07ca
 DESCRIPTION: Implementation of data persistence.
 CHANGES:
 - Upgraded useTasks hook to implement localStorage.
