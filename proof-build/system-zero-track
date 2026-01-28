@@ -1,0 +1,22 @@
+[TRACKING LOG]
+
+ID: task-1-pilot
+STATUS: COMPLETED
+DESCRIPTION: Initial functional prototype.
+FEATURES:
+- In-memory state management (Ephemeral)
+- Glassmorphism UI
+- Basic CRUD operations
+NOTE: Data lost on reload.
+
+--------------------------------------------------
+
+ID: task-2-alpha-persistence
+STATUS: COMPLETED (CURRENT)
+DESCRIPTION: Implementation of data persistence.
+CHANGES:
+- Upgraded useTasks hook to implement localStorage.
+- Auto-hydration on load.
+- Auto-save on state change.
+EXPLANATION:
+Storage logic was added to bridge the gap between sessions. We chose localStorage for simplicity as it fits the "System Zero" requirement for client-side containment without needing a backend yet.
