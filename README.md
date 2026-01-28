@@ -1,73 +1,62 @@
-# React + TypeScript + Vite
+# ZERO-TASK: The Auditable Task Engine
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Zero-Task is a lightweight, single-page task management application built with **React 19**, **TypeScript**, and **Vite**. It follows the "System Zero" methodology, emphasizing auditability, deterministic state, and containment.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Auditability**: All actions (Add, Edit, Toggle, Delete) are tracked and verifiable.
+- **Persistence**: Automatic state hydration and saving to browser `localStorage`.
+- **Search & Filtering**: Live search by title/description and status filtering (All/Active/Completed).
+- **Glassmorphism UI**: Premium dark-mode aesthetic with modern CSS tokens.
+- **Testing**: Comprehensive test suite using Vitest and React Testing Library.
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Local Development
 
-## Expanding the ESLint configuration
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+2. **Run Dev Server**:
+   ```bash
+   npm run dev
+   ```
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+3. **Run Tests**:
+   ```bash
+   npm run test
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Production Deployment (Containment)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+The project is fully containerized for deterministic deployment.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1. **Build and Run with Docker**:
+   ```bash
+   docker build -t zero-task .
+   docker run -p 8080:80 zero-task
+   ```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+2. **Run with Docker Compose**:
+   ```bash
+   docker-compose up --build
+   ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+The application will be available at `http://localhost:8080`.
+
+## Architecture & State Flow
+
+The application uses a **Composition Root** pattern in `App.tsx`, with a custom hook `useTasks` managing the core logic and persistence.
+
+- **Storage**: Browser `localStorage` (Key: `zero-task-data`)
+- **State Flow**: Unidirectional data flow from `useTasks` -> `App` -> `Components`.
+- **Verification**: Automated CI/CD via GitHub Actions (`verify.yml`) for linting, testing, and building.
+
+## System Zero Principles
+
+This project serves as a proof-of-concept for "System Zero" engineering:
+1. **Self-Contained**: No external database required (Client-side sovereignty).
+2. **Auditable**: Simple, readable code with 100% logic coverage.
+3. **Immutable History**: Logic preserved through Git commits and tracking logs.
