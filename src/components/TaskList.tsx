@@ -7,6 +7,7 @@ import './TaskList.css';
 interface TaskListProps {
     tasks: TTask[];
     filter: FilterType;
+    searchTerm: string;
     onToggle: (id: string) => void;
     onDelete: (id: string) => void;
     onUpdate: (id: string, title: string, description: string) => void;
@@ -18,9 +19,20 @@ interface TaskListProps {
  * Renders the list of tasks or an empty state message.
  * Acts as a pure presentational component.
  */
-export const TaskList = ({ tasks, filter, onToggle, onDelete, onUpdate }: TaskListProps) => {
-    // Filter tasks based on current filter
-    const filteredTasks = tasks.filter(task => {
+export const TaskList = ({ tasks, filter, searchTerm, onToggle, onDelete, onUpdate }: TaskListProps) => {
+    // Filter tasks by search term first
+    let filteredTasks = tasks;
+
+    if (searchTerm.trim()) {
+        const lowerSearch = searchTerm.toLowerCase();
+        filteredTasks = filteredTasks.filter(task =>
+            task.title.toLowerCase().includes(lowerSearch) ||
+            task.description.toLowerCase().includes(lowerSearch)
+        );
+    }
+
+    // Then filter by status
+    filteredTasks = filteredTasks.filter(task => {
         if (filter === 'active') return task.status !== TaskStatus.COMPLETED;
         if (filter === 'completed') return task.status === TaskStatus.COMPLETED;
         return true; // 'all'

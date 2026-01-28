@@ -2,6 +2,7 @@ import './App.css';
 import { TaskForm } from './components/TaskForm';
 import { TaskList } from './components/TaskList';
 import { FilterBar, type FilterType } from './components/FilterBar';
+import { SearchBar } from './components/SearchBar';
 import { useTasks } from './hooks/useTasks';
 import { useState } from 'react';
 
@@ -19,6 +20,9 @@ function App() {
   // Filter state
   const [filter, setFilter] = useState<FilterType>('all');
 
+  // Search state
+  const [searchTerm, setSearchTerm] = useState('');
+
   return (
     <div className="app-container">
       {/* Header Section */}
@@ -32,6 +36,9 @@ function App() {
         {/* Form to create new tasks */}
         <TaskForm onAdd={addTask} />
 
+        {/* Search Bar */}
+        <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+
         {/* Filter Controls */}
         <FilterBar currentFilter={filter} onFilterChange={setFilter} />
 
@@ -39,6 +46,7 @@ function App() {
         <TaskList
           tasks={tasks}
           filter={filter}
+          searchTerm={searchTerm}
           onToggle={toggleTask}
           onDelete={deleteTask}
           onUpdate={updateTask}
