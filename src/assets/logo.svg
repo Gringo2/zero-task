@@ -1,0 +1,89 @@
+<svg width="800" height="800" viewBox="0 0 400 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Definitions for advanced effects -->
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="glass_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+
+    <!-- Cyan Glow Gradient -->
+    <linearGradient id="neon_grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#22d3ee" />
+    </linearGradient>
+
+    <!-- Chrome/Highlight Gradient -->
+    <linearGradient id="highlight_grad" x1="0%" y1="0%" x2="40%" y2="100%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.3" />
+      <stop offset="50%" stop-color="white" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="white" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Drop Shadow / Glow Filter -->
+    <filter id="outer_glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="inner_neon" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="2" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Outer Shadow Layer -->
+  <path d="M120 40 L280 40 L360 120 L360 280 L280 360 L120 360 L40 280 L40 120 Z" fill="#000" fill-opacity="0.3" filter="url(#outer_glow)" />
+
+  <!-- Main Body Layer -->
+  <path d="M125 45 L275 45 L355 125 L355 275 L275 355 L125 355 L45 275 L45 125 Z" fill="url(#glass_grad)" stroke="#06b6d4" stroke-width="1.5" />
+
+  <!-- Depth Bevel (Bottom Right Shadow) -->
+  <path d="M275 45 L355 125 L355 275 L275 355 L125 355" stroke="#000" stroke-width="4" stroke-opacity="0.4" fill="none" />
+
+  <!-- Glass Sheen Layer (Subtle Overlay) -->
+  <path d="M125 45 L275 45 L355 125 L355 275 L275 355 L125 355 L45 275 L45 125 Z" fill="url(#highlight_grad)" />
+
+  <!-- Concentric Inner Layers -->
+  <path d="M135 60 L265 60 L340 135 L340 265 L265 340 L135 340 L60 265 L60 135 Z" stroke="#06b6d4" stroke-width="0.5" stroke-opacity="0.3" fill="none" />
+  <path d="M150 80 L250 80 L320 150 L320 250 L250 320 L150 320 L80 250 L80 150 Z" stroke="#06b6d4" stroke-width="1" stroke-opacity="0.5" fill="none" />
+
+  <!-- Inner Cutout (The "Zero" center) -->
+  <path d="M165 140 L235 140 L260 165 L260 235 L235 260 L165 260 L140 235 L140 165 Z" fill="#0f172a" stroke="#06b6d4" stroke-width="2" />
+
+  <!-- Circuit Traces & Nodes -->
+  <g stroke="#22d3ee" stroke-width="1.5" filter="url(#inner_neon)">
+    <!-- Trace North-West -->
+    <path d="M125 100 L180 100 L200 80" fill="none" />
+    <circle cx="200" cy="80" r="3" fill="#22d3ee" stroke="none" />
+    <circle cx="125" cy="100" r="2.5" fill="#22d3ee" stroke="none" />
+
+    <!-- Trace North-East -->
+    <path d="M275 100 L220 100 L205 115" fill="none" />
+    <circle cx="275" cy="100" r="3" fill="#22d3ee" stroke="none" />
+
+    <!-- Trace South-West -->
+    <path d="M125 300 L180 300 L195 285" fill="none" />
+    <circle cx="125" cy="300" r="3" fill="#22d3ee" stroke="none" />
+
+    <!-- Trace South-East -->
+    <path d="M275 300 L220 300 L200 320" fill="none" />
+    <circle cx="200" cy="320" r="3" fill="#22d3ee" stroke="none" />
+    <circle cx="275" cy="300" r="2.5" fill="#22d3ee" stroke="none" />
+
+    <!-- Vertical Side Traces -->
+    <path d="M65 180 L80 180 L90 190" fill="none" />
+    <circle cx="65" cy="180" r="2.5" fill="#22d3ee" stroke="none" />
+    
+    <path d="M335 220 L320 220 L310 210" fill="none" />
+    <circle cx="335" cy="220" r="2.5" fill="#22d3ee" stroke="none" />
+  </g>
+
+  <!-- Diagonal Highlight Sheen (The final "glass" touch) -->
+  <path d="M45 125 L125 45 L355 275 L275 355 Z" fill="white" fill-opacity="0.03" />
+
+  <!-- Typography -->
+  <text x="200" y="440" font-family="Arial, sans-serif" font-weight="900" font-size="42" fill="#334155" text-anchor="middle" letter-spacing="4">SYSTEM ZERO</text>
+  <text x="200" y="440" font-family="Arial, sans-serif" font-weight="900" font-size="42" fill="url(#neon_grad)" fill-opacity="0.8" text-anchor="middle" letter-spacing="4" filter="url(#inner_neon)">SYSTEM ZERO</text>
+
+</svg>

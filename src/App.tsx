@@ -6,6 +6,8 @@ import { SearchBar } from './components/SearchBar';
 import { useTasks } from './hooks/useTasks';
 import { useState } from 'react';
 
+import logo from './assets/logo.svg';
+
 /**
  * Root Component (App)
  * 
@@ -27,8 +29,13 @@ function App() {
     <div className="app-container">
       {/* Header Section */}
       <header className="app-header">
-        <h1 className="logo">ZERO-TASK</h1>
-        <p className="subtitle">The Auditable Task Engine</p>
+        <div className="header-brand">
+          <img src={logo} alt="System Zero Logo" className="app-logo" />
+          <div className="header-text">
+            <h1 className="logo">ZERO-TASK</h1>
+            <p className="subtitle">The Auditable Task Engine</p>
+          </div>
+        </div>
       </header>
 
       {/* Main Content Area */}

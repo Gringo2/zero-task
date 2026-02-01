@@ -92,7 +92,7 @@ Production-grade documentation suitable for enterprise review.
 
 ID: task-8-staging-deployment
 STATUS: COMPLETED (CURRENT)
-COMMIT: 648afad
+COMMIT: caa372a
 DESCRIPTION: Automated staging deployment pipeline.
 CHANGES:
 - Created deploy.yml GitHub Actions workflow.

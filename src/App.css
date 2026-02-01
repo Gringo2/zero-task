@@ -12,15 +12,31 @@
   margin-bottom: var(--space-xl);
 }
 
+.header-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+}
+
+.app-logo {
+  width: 60px;
+  height: 60px;
+  filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.3));
+}
+
+.header-text {
+  text-align: left;
+}
+
 .logo {
-  font-size: 3rem;
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  background: linear-gradient(to bottom right, var(--accent-primary), var(--accent-hover));
-  background-clip: text;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  background: linear-gradient(to right, var(--accent-primary), #22d3ee);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: var(--space-xs);
+  margin: 0;
 }
 
 .subtitle {
