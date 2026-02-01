@@ -1,4 +1,10 @@
+<div align="center">
+  <img src="src/assets/logo.svg" alt="System Zero Logo" width="120" />
+</div>
+
 # ZERO-TASK: The Auditable Task Engine
+
+![System Zero Social Preview](public/og-image.png)
 
 Zero-Task is a lightweight, single-page task management application built with **React 19**, **TypeScript**, and **Vite**. It follows the "System Zero" methodology, emphasizing auditability, deterministic state, and containment.
 
