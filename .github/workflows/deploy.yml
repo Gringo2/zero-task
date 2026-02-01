@@ -34,16 +34,18 @@ jobs:
     needs: verify
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    env:
+      DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
 
     steps:
       - name: Trigger Render Deploy
-        if: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        if: env.DEPLOY_HOOK != ''
         run: |
-          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+          curl -X POST "$DEPLOY_HOOK"
           
       - name: Deployment Status
         run: |
-          if [ -z "${{ secrets.RENDER_DEPLOY_HOOK }}" ]; then
+          if [ -z "$DEPLOY_HOOK" ]; then
             echo "⚠️  RENDER_DEPLOY_HOOK secret not configured"
             echo "ℹ️  To enable automated deployment:"
             echo "   1. Create a Web Service on Render (Docker runtime)"
