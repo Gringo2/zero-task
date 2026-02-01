@@ -46,7 +46,38 @@ The project is fully containerized for deterministic deployment.
 
 The application will be available at `http://localhost:8080`.
 
-## Architecture & State Flow
+### Automated Staging Deployment
+
+The project includes automated deployment to staging via GitHub Actions.
+
+**Setup Instructions**:
+
+1. **Create a Render Web Service**:
+   - Go to [Render Dashboard](https://dashboard.render.com)
+   - Click "New" → "Web Service"
+   - Connect your GitHub repository
+   - Select "Docker" as the runtime
+   - Deploy the service
+
+2. **Configure Deploy Hook**:
+   - In Render service settings, navigate to "Deploy Hook" section
+   - Copy the Deploy Hook URL
+   - Go to GitHub repository → Settings → Secrets and variables → Actions
+   - Add new secret: `RENDER_DEPLOY_HOOK` with the copied URL
+
+3. **Automatic Deployment**:
+   - Every push to `main` branch will:
+     1. Run tests and linting
+     2. Build the application
+     3. Trigger Render deployment (if secret is configured)
+
+**Manual Deployment**:
+```bash
+# Trigger deployment manually from GitHub Actions tab
+# Navigate to "Deploy to Staging" workflow → "Run workflow"
+```
+
+## Documentation
 
 The application uses a **Composition Root** pattern in `App.tsx`, with a custom hook `useTasks` managing the core logic and persistence.
 
