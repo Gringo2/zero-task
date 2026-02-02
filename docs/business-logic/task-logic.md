@@ -54,11 +54,11 @@ Users can edit the `title` and `description` of any task.
 graph TD
     Start((Start)) --> Create[Create Task]
     Create --> Valid{Valid Title?}
-    Valid -- No --> SilentFail[Ignore Input]
-    Valid -- Yes --> Pending[State: PENDING]
+    Valid -- No --> SilentFail["Ignore Input"]
+    Valid -- Yes --> Pending["State: PENDING"]
     
-    Pending --> Toggle[Toggle Status]
-    Toggle --> Completed[State: COMPLETED]
+    Pending --> Toggle["Toggle Status"]
+    Toggle --> Completed["State: COMPLETED"]
     
     Completed --> Toggle
     

@@ -115,20 +115,20 @@ flowchart LR
     end
     
     subgraph "Application State"
-        Hook[useTasks Hook]
-        State[tasks: TTask[]]
-        Filter[filter: FilterType]
-        Search[searchTerm: string]
+        Hook["useTasks Hook"]
+        State["tasks: TTask[]"]
+        Filter["filter: FilterType"]
+        Search["searchTerm: string"]
     end
     
     subgraph "Persistence Layer"
-        LS[localStorage]
+        LS["localStorage"]
     end
     
     subgraph "View Layer"
-        Form[TaskForm]
-        List[TaskList]
-        Item[TaskItem]
+        Form["TaskForm"]
+        List["TaskList"]
+        Item["TaskItem"]
     end
     
     User -->|Add Task| Form
@@ -156,9 +156,9 @@ The application runs in a **multi-stage Docker container**:
 ```mermaid
 graph LR
     subgraph "Build Stage"
-        NodeBuild[Node 20 Alpine<br/>Build Environment]
-        NPM[npm install + build]
-        Dist[/dist output]
+        NodeBuild["Node 20 Alpine<br/>Build Environment"]
+        NPM["npm install + build"]
+        Dist["/dist output"]
     end
     
     subgraph "Production Stage"

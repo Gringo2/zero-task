@@ -114,21 +114,21 @@ Components are split into two categories:
 ```mermaid
 graph TD
     subgraph "Global State (Context/Hooks)"
-        Tasks[tasks: TTask[]]
-        Theme[theme: 'light' | 'dark']
+        Tasks["tasks: TTask[]"]
+        Theme["theme: 'light' | 'dark'"]
     end
     
     subgraph "UI State (App)"
-        Filter[filter: FilterType]
-        Search[searchTerm: string]
+        Filter["filter: FilterType"]
+        Search["searchTerm: string"]
     end
     
     subgraph "Local State (Components)"
-        FormTitle[TaskForm: title]
-        FormDesc[TaskForm: description]
-        EditMode[TaskItem: isEditing]
-        EditTitle[TaskItem: editTitle]
-        EditDesc[TaskItem: editDesc]
+        FormTitle["TaskForm: title"]
+        FormDesc["TaskForm: description"]
+        EditMode["TaskItem: isEditing"]
+        EditTitle["TaskItem: editTitle"]
+        EditDesc["TaskItem: editDesc"]
     end
     
     Tasks --> Filter
@@ -216,10 +216,10 @@ Subtle animations enhance UX:
 ```mermaid
 graph TB
     subgraph "Test Pyramid"
-        E2E[E2E Tests<br/>0 tests<br/>Future]
-        Integration[Integration Tests<br/>0 tests<br/>Not needed yet]
-        Component[Component Tests<br/>12 tests<br/>TaskForm, FilterBar, SearchBar]
-        Unit[Unit Tests<br/>7 tests<br/>useTasks hook]
+        E2E["E2E Tests<br/>0 tests<br/>Future"]
+        Integration["Integration Tests<br/>0 tests<br/>Not needed yet"]
+        Component["Component Tests<br/>12 tests<br/>TaskForm, FilterBar, SearchBar"]
+        Unit["Unit Tests<br/>7 tests<br/>useTasks hook"]
     end
     
     E2E --- Integration
