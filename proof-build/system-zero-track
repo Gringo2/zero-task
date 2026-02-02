@@ -180,3 +180,19 @@ RESULTS:
 Documentation is now served via a professional, localized web interface with searchable navigation and rendered diagrams.
 EXPLANATION:
 Serving documentation through a dedicated, feature-rich interface (MkDocs) ensures that technical knowledge is accessible and navigable. The automatic port checking script further enhances the developer experience by preventing common infrastructure conflicts.
+
+--------------------------------------------------
+
+ID: task-14-mermaid-fix
+STATUS: COMPLETED (CURRENT)
+COMMIT: 95eca18
+DESCRIPTION: Technical refinement for Mermaid diagram stability.
+CHANGES:
+- Standardized all diagrams to graph TD (Top-Down) for maximum layout reliability.
+- Simplified node labels (e.g., TTask[] -> TTask Array) to avoid parser conflicts.
+- Ensured 100% quoting of labels containing functional characters (colons, slashes).
+- Verified syntax across ARCHITECTURE, DESIGN, and SRS documents.
+RESULTS:
+Documentation diagrams are now fully renderable in the Material MkDocs theme without raw code artifacts.
+EXPLANATION:
+MkDocs/Material processing of Mermaid diagrams can be sensitive to specific character combinations like brackets and certain line-break syntax. Moving to a standardized, quoted, and Top-Down approach ensures that the technical maps remain visual and accessible across all documentation pages.
