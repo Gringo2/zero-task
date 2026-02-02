@@ -1,8 +1,8 @@
 # Software Requirements Specification (SRS)
 
 **Project**: ZERO-TASK  
-**Version**: 1.0  
-**Date**: January 2026  
+**Version**: 1.1  
+**Date**: February 2026  
 **Status**: Production-Ready
 
 ---
@@ -68,7 +68,8 @@ graph LR
 4. Delete tasks
 5. Filter tasks by status (All/Active/Completed)
 6. Search tasks by title or description
-7. Persist tasks across sessions
+7. Toggle between Light and Dark visual themes
+8. Persist tasks and theme preferences across sessions
 
 ### 2.3 User Characteristics
 
@@ -202,6 +203,25 @@ graph LR
 
 **Priority**: MEDIUM  
 **Verification**: `SearchBar.test.tsx` (5 tests)
+
+---
+
+### 3.3 Theme Management
+
+#### 3.3.1 Feature: Theme Switching
+
+**Description**: User can toggle between Light and Dark visual themes.
+
+**Functional Requirements**:
+- **FR-8.1**: System SHALL provide a theme toggle button in the header
+- **FR-8.2**: System SHALL support "Light" and "Dark" themes
+- **FR-8.3**: System SHALL persist theme preference to localStorage using key "zero-task-theme"
+- **FR-8.4**: System SHALL apply theme via `data-theme` attribute on the root element
+- **FR-8.5**: System SHALL transition theme changes smoothly (300ms)
+- **FR-8.6**: System SHALL default to "Dark" theme on first visit
+
+**Priority**: LOW  
+**Verification**: Manual (verified via UI interaction)
 
 ---
 
@@ -344,12 +364,6 @@ graph TB
 
 ### 7.1 Verification Methods
 
-| Requirement | Method | Tool |
-|-------------|--------|------|
-| Functional | Automated Tests | Vitest + React Testing Library |
-| UI/UX | Manual Testing | Browser DevTools |
-| Performance | Profiling | Chrome Lighthouse |
-| Security | Static Analysis | ESLint |
 | Deployment | Container Testing | Docker Compose |
 
 ### 7.2 Acceptance Criteria
@@ -359,7 +373,8 @@ graph TB
 2. Linting passes with zero errors
 3. Production build succeeds
 4. Docker container runs successfully
-5. All features demonstrated in browser
+5. Manual verification of Search, Filtering, and Theme switching
+6. All features demonstrated in browser
 
 ---
 

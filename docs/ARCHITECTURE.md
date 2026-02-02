@@ -12,43 +12,41 @@
 
 ```mermaid
 graph TB
-    subgraph "Client Layer"
+subgraph "Client Layer"
         Browser[Browser Runtime]
         LocalStorage[localStorage API]
     end
     
     subgraph "Application Layer"
         App[App.tsx<br/>Composition Root]
-        Router[State Router]
     end
     
     subgraph "State Management"
-        UseTasks[useTasks Hook<br/>State Logic]
-        TaskState[Task State<br/>TTask[]]
+        UseTasks[useTasks Hook<br/>Task Logic]
+        UseTheme[useTheme Hook<br/>Theme Logic]
     end
     
     subgraph "UI Components"
-        TaskForm[TaskForm<br/>Input]
-        SearchBar[SearchBar<br/>Search]
-        FilterBar[FilterBar<br/>Filter]
-        TaskList[TaskList<br/>Container]
-        TaskItem[TaskItem<br/>Display]
+        TaskForm[TaskForm]
+        SearchBar[SearchBar]
+        FilterBar[FilterBar]
+        ThemeToggle[ThemeToggle]
+        TaskList[TaskList]
     end
     
     Browser --> App
     App --> UseTasks
+    App --> UseTheme
     App --> TaskForm
     App --> SearchBar
     App --> FilterBar
+    App --> ThemeToggle
     App --> TaskList
     
-    TaskList --> TaskItem
+    TaskList --> TaskItem[TaskItem]
     
-    UseTasks --> TaskState
     UseTasks <--> LocalStorage
-    
-    TaskForm -.Add.-> UseTasks
-    TaskItem -.Toggle/Edit/Delete.-> UseTasks
+    UseTheme <--> LocalStorage
 ```
 
 ## Component Hierarchy
@@ -97,6 +95,7 @@ stateDiagram-v2
         [*] --> DeleteTask
         [*] --> SearchTasks
         [*] --> FilterTasks
+        [*] --> ToggleTheme
     }
     
     UserAction --> StateUpdate: Callback Invoked

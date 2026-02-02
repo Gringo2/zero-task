@@ -2,7 +2,7 @@
 
 ## Design Philosophy: System Zero
 
-The ZERO-TASK application is built on **System Zero engineering principles**, which emphasize:
+The **ZERO-TASK** application is built on **System Zero engineering principles**, which emphasize:
 
 1. **Auditability**: Every state change is traceable and verifiable
 2. **Containment**: Self-sufficient operation without external dependencies
@@ -47,6 +47,30 @@ export const useTasks = () => {
 };
 ```
 
+### 3. Theme State Pattern
+
+The `useTheme` hook manages visual presentation:
+
+```typescript
+export const useTheme = () => {
+  const [theme, setTheme] = useState<Theme>(() => {
+    // Hydrate from localStorage
+  });
+
+  useEffect(() => {
+    // Apply [data-theme] to documentElement
+    // Persist to localStorage
+  }, [theme]);
+
+  return { theme, toggleTheme };
+};
+```
+
+**Benefits**:
+- Centralized theme control
+- Persistent user preference
+- Decoupled from task logic
+
 **Benefits**:
 - Separation of concerns (logic vs. presentation)
 - Reusable across components
@@ -77,6 +101,7 @@ Components are split into two categories:
 - `TaskItem` - Displays a task
 - `FilterBar` - Displays filter buttons
 - `SearchBar` - Displays search input
+- `ThemeToggle` - Displays sun/moon toggle
 
 **Container** (State Logic):
 - `App` - Manages global state
@@ -88,8 +113,9 @@ Components are split into two categories:
 
 ```mermaid
 graph TD
-    subgraph "Global State (useTasks)"
+    subgraph "Global State (Context/Hooks)"
         Tasks[tasks: TTask[]]
+        Theme[theme: 'light' | 'dark']
     end
     
     subgraph "UI State (App)"
