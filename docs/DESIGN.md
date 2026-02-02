@@ -134,8 +134,8 @@ graph TD
     Tasks --> Filter
     Tasks --> Search
     
-    Filter --> Filtered[Filtered Tasks]
-    Search --> Filtered
+    Filter --> Filtered["Filtered Tasks"]
+    Search --> Filtered["Filtered Tasks"]
     
     Filtered --> TaskList
 ```

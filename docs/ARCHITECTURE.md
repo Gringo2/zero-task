@@ -109,9 +109,9 @@ stateDiagram-v2
 ## Data Flow Diagram
 
 ```mermaid
-flowchart LR
+graph LR
     subgraph "Input Layer"
-        User[User Actions]
+        User["User Actions"]
     end
     
     subgraph "Application State"
@@ -131,22 +131,22 @@ flowchart LR
         Item["TaskItem"]
     end
     
-    User -->|Add Task| Form
-    User -->|Edit/Delete| Item
+    User -->|"Add Task"| Form
+    User -->|"Edit/Delete"| Item
     User -->|Filter| Filter
     User -->|Search| Search
     
-    Form -->|addTask()| Hook
-    Item -->|toggleTask()<br/>updateTask()<br/>deleteTask()| Hook
+    Form -->|"addTask()"| Hook
+    Item -->|"toggleTask()<br/>updateTask()<br/>deleteTask()"| Hook
     
-    Hook <-->|Sync| LS
+    Hook --- LS
     Hook --> State
     
     State --> List
     Filter --> List
     Search --> List
     
-    List -->|Filtered Tasks| Item
+    List -->|"Filtered Tasks"| Item
 ```
 
 ## Container Architecture
@@ -162,16 +162,16 @@ graph LR
     end
     
     subgraph "Production Stage"
-        Nginx[Nginx Alpine<br/>Web Server]
-        Static[Static Files<br/>from /dist]
+        Nginx["Nginx Alpine<br/>Web Server"]
+        Static["Static Files<br/>from /dist"]
     end
     
     NodeBuild --> NPM
     NPM --> Dist
-    Dist -.Copy.-> Static
+    Dist -. "Copy" .-> Static
     Static --> Nginx
     
-    Nginx -->|Port 80| External[External Access]
+    Nginx -->|"Port 80"| External["External Access"]
 ```
 
 ## Technology Stack
