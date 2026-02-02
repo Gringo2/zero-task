@@ -19,5 +19,6 @@ This document outlines potential future development directions for the Zero-Task
 *   **Gestures**: Implement drag-and-drop reordering for intuitive task prioritization.
 
 ## 4. Infrastructure & DevOps
-*   **Automated Staging**: Deploy the Dockerized app to a staging environment (e.g., Vercel, Render) as part of the CI/CD pipeline.
+*   **E2E Testing**: Add Playwright tests for critical user flows (create task, filter, search).
+*   **Performance Monitoring**: Integrate Lighthouse CI to track bundle size and performance metrics.
 *   **Small Footprint**: Further optimize the Docker build to follow "System Zero" requirements for minimal resource usage.
