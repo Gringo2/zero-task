@@ -113,17 +113,17 @@ Components are split into two categories:
 
 ```mermaid
 graph TD
-    subgraph "Global State (Context/Hooks)"
-        Tasks["tasks: TTask[]"]
-        Theme["theme: 'light' | 'dark'"]
+    subgraph "Global State"
+        Tasks["tasks: TTask Array"]
+        Theme["theme: light or dark"]
     end
     
-    subgraph "UI State (App)"
+    subgraph "UI State"
         Filter["filter: FilterType"]
         Search["searchTerm: string"]
     end
     
-    subgraph "Local State (Components)"
+    subgraph "Local State"
         FormTitle["TaskForm: title"]
         FormDesc["TaskForm: description"]
         EditMode["TaskItem: isEditing"]
@@ -134,8 +134,8 @@ graph TD
     Tasks --> Filter
     Tasks --> Search
     
-    Filter --> Filtered["Filtered Tasks"]
-    Search --> Filtered["Filtered Tasks"]
+    Filter --> Filtered["Filtered Tasks List"]
+    Search --> Filtered["Filtered Tasks List"]
     
     Filtered --> TaskList
 ```

@@ -109,14 +109,14 @@ stateDiagram-v2
 ## Data Flow Diagram
 
 ```mermaid
-graph LR
+graph TD
     subgraph "Input Layer"
         User["User Actions"]
     end
     
     subgraph "Application State"
         Hook["useTasks Hook"]
-        State["tasks: TTask[]"]
+        State["tasks: TTask Array"]
         Filter["filter: FilterType"]
         Search["searchTerm: string"]
     end
@@ -133,11 +133,11 @@ graph LR
     
     User -->|"Add Task"| Form
     User -->|"Edit/Delete"| Item
-    User -->|Filter| Filter
-    User -->|Search| Search
+    User -->|"Filter"| Filter
+    User -->|"Search"| Search
     
     Form -->|"addTask()"| Hook
-    Item -->|"toggleTask()<br/>updateTask()<br/>deleteTask()"| Hook
+    Item -->|"toggleTask(), updateTask(), deleteTask()"| Hook
     
     Hook --- LS
     Hook --> State
@@ -154,16 +154,16 @@ graph LR
 The application runs in a **multi-stage Docker container**:
 
 ```mermaid
-graph LR
+graph TD
     subgraph "Build Stage"
-        NodeBuild["Node 20 Alpine<br/>Build Environment"]
+        NodeBuild["Node 20 Alpine Environment"]
         NPM["npm install + build"]
-        Dist["/dist output"]
+        Dist["dist output folder"]
     end
     
     subgraph "Production Stage"
-        Nginx["Nginx Alpine<br/>Web Server"]
-        Static["Static Files<br/>from /dist"]
+        Nginx["Nginx Alpine Web Server"]
+        Static["Static Files from dist"]
     end
     
     NodeBuild --> NPM

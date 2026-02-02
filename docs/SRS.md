@@ -45,17 +45,17 @@ ZERO-TASK is a **single-user, client-side task management application** that pro
 ### 2.1 Product Perspective
 
 ```mermaid
-graph LR
-    User[End User] -->|Interacts| Browser[Web Browser]
-    Browser -->|Runs| App[ZERO-TASK SPA]
-    App <-->|Persist| LocalStorage[localStorage API]
+graph TD
+    User["End User"] -->|"Interacts"| Browser["Web Browser"]
+    Browser -->|"Runs"| App["ZERO-TASK SPA"]
+    App --- LocalStorage["localStorage API"]
     
     subgraph "Deployment"
-        Docker[Docker Container]
-        Nginx[Nginx Server]
+        Docker["Docker Container"]
+        Nginx["Nginx Server"]
     end
     
-    App -.Build.-> Docker
+    App -. "Build" .-> Docker
     Docker --> Nginx
 ```
 
