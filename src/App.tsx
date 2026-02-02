@@ -7,17 +7,20 @@ import { useTasks } from './hooks/useTasks';
 import { useState } from 'react';
 
 import logo from './assets/logo.svg';
+import { useTheme } from './hooks/useTheme';
+import { ThemeToggle } from './components/ThemeToggle';
 
 /**
  * Root Component (App)
  * 
  * Acts as the "Composition Root" for the application.
- * Initializes the global state (useTasks) and passes it down
+ * Initializes the global state (useTasks, useTheme) and passes it down
  * to child components.
  */
 function App() {
-  // Initialize State Hook
+  // Initialize State Hooks
   const { tasks, addTask, toggleTask, deleteTask, updateTask } = useTasks();
+  const { theme, toggleTheme } = useTheme();
 
   // Filter state
   const [filter, setFilter] = useState<FilterType>('all');
@@ -35,6 +38,9 @@ function App() {
             <h1 className="logo">ZERO-TASK</h1>
             <p className="subtitle">The Auditable Task Engine</p>
           </div>
+        </div>
+        <div className="header-actions">
+          <ThemeToggle theme={theme} onToggle={toggleTheme} />
         </div>
       </header>
 

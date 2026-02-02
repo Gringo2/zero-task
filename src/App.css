@@ -1,5 +1,5 @@
 .app-container {
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
   padding: var(--space-xl) var(--space-md);
   display: flex;
@@ -8,8 +8,19 @@
 }
 
 .app-header {
-  text-align: center;
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: var(--space-xl);
+  padding: 0 var(--space-md);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
 }
 
 .header-brand {
