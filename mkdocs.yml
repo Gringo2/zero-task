@@ -26,6 +26,10 @@ nav:
   - Welcome: README.md
   - System Architecture: ARCHITECTURE.md
   - System Design: DESIGN.md
+  - Business Logic:
+      - Task Lifecycle: business-logic/task-logic.md
+      - Search & Filtering: business-logic/discovery-logic.md
+      - System & Themes: business-logic/system-logic.md
   - Requirements (SRS): SRS.md
 
 markdown_extensions:
