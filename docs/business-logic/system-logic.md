@@ -1,6 +1,10 @@
-# System & persistence Logic
+# System & Persistence Logic: The Immortal State
 
-This document details the internal system mechanics for data durability and visual themes.
+This document details the internal system mechanics for data durability and visual themes. In **ZERO-TASK**, we aim for the **Immortal State**—data that lives on the user's hardware, independent of cloud availability.
+
+## 🧩 Conceptual Alignment
+- **Local Sovereignty**: Data never leaves the browser's `localStorage` boundaries.
+- **Zero-Flicker UX**: The theme engine is optimized for early-hydration to prevent visual artifacts on load.
 
 ## Functional Mapping
 | Requirement | Logic Description | Implementation Reference |
@@ -21,7 +25,7 @@ Persistence is handled via the **Web Storage API (localStorage)**.
 2. **Synchronization**: Every state change triggers an effect that serializes the entire task array to JSON and writes it to `localStorage`.
 
 ### 1.2 Constraint Handling
-- **Failure Mode**: If `localStorage` is blocked or full, the system logs a console error and continues in-memory only. This ensures the app remains functional for the current session.
+- **Failure Mode**: If `localStorage` is blocked or full, the system logs a console error and continues in-memory only. This ensures the app remains functional for the current session, maintaining the "System Zero" principle of graceful degradation.
 
 ---
 
@@ -32,7 +36,7 @@ The theme engine uses **CSS Variables** and **Data Attributes** for a zero-JS-co
 
 1. **State**: The `theme` variable holds either `light` or `dark`.
 2. **Propagation**: The engine applies `[data-theme]` to the `document.documentElement`.
-3. **Transition**: A global transition rule in `tokens.css` ensures all variable-linked colors fade smoothly.
+3. **Transition**: A global transition rule in `tokens.css` ensures all variable-linked colors fade smoothly, creating a "Liquid State" transition.
 
 ### 2.2 Persistence
 Theme preference is stored separately in `zero-task-theme` to ensure the user's visual preference is restored immediately upon page load, preventing "theme flickers".

@@ -1,4 +1,4 @@
-# System Design
+# System Design & Pattern Doctrine
 
 ## Design Philosophy: System Zero
 
@@ -9,9 +9,19 @@ The **ZERO-TASK** application is built on **System Zero engineering principles**
 3. **Determinism**: Reproducible builds and predictable behavior
 4. **Sovereignty**: User control over their data
 
+## 🎨 Aesthetic Theory: Layered Clarity
+
+The visual identity of **ZERO-TASK** is driven by the principle of **Layered Clarity**. We employ a **Glassmorphism-lite** aesthetic—not merely for modern vanity, but as a functional metaphor for the system's transparency.
+
+- **Dynamic Interaction**: Hover states and micro-animations (implemented via Framer Motion) provide immediate tactile feedback, reinforcing the "Reactive Loop" architecture.
+- **Visual Hierarchy**: Shadows and gradients are used to define the "Z-index of importance," ensuring the user's focus is always on the task at hand.
+- **Glassmorphism**: Translucent panels represent the "Containment" principle, allowing the background depth to exist without distracting from the primary task interface.
+
 ## Design Patterns
 
-### 1. Composition Root Pattern
+### 1. Composition Root (The Orchestrator)
+- **Concept**: Centralize all dependency injection and state management.
+- **In ZERO-TASK**: `App.tsx` serves as the orchestrator. It instantiates the `useTasks` and `useTheme` logic engines and distributes their outputs to the visual components. This prevents "prop drilling" and keeps the components pure and predictable.
 
 The `App.tsx` component serves as the **Composition Root**, responsible for:
 - Initializing the state management hook (`useTasks`)
@@ -23,7 +33,9 @@ The `App.tsx` component serves as the **Composition Root**, responsible for:
 - Centralized state initialization
 - Simplified testing (mock at the root)
 
-### 2. Custom Hook Pattern
+### 2. Custom Hook Pattern (The Logic Container)
+- **Concept**: Encapsulate complex business logic and stateful behavior into reusable, isolated units.
+- **In ZERO-TASK**: Logic for persistence, filtering, and CRUD operations is expunged from the components and housed in `useTasks.ts`. This allows us to test the "Brain" of the application independently from the "Body" (UI).
 
 The `useTasks` hook encapsulates all state logic:
 
@@ -209,7 +221,15 @@ Subtle animations enhance UX:
 }
 ```
 
-## Testing Strategy
+## 🧪 Testing Strategy: The Doctrine of Determinism
+
+We do not test for "coverage" as a metric; we test for **certainty**. Our strategy is a hybrid model that prioritizes the most critical paths of the "Sovereign SPA".
+
+### 1. The Mock-Free Philosophy
+We prefer testing our hooks and components against real, albeit virtualized, environments. Our `useTasks` tests use actual `localStorage` mocks to ensure that the serialization logic—the most fragile part of a local-first app—is 100% deterministic.
+
+### 2. Component Isolation
+Every UI component is treated as a "Deterministic View Function". Given a specific set of props (state), the component MUST render the exact same UI 100% of the time, without side effects.
 
 ### Test Pyramid
 

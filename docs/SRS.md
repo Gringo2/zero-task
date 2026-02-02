@@ -5,6 +5,12 @@
 **Date**: February 2026  
 **Status**: Production-Ready
 
+## 🎯 The Philosophy of Requirements
+
+The requirements for **ZERO-TASK** are not just a list of features; they are a specification for **Digital Autonomy**. 
+
+Every requirement—from task creation to the theme engine—must adhere to the "System Zero" doctrine. If a requirement cannot be implemented such that the user remains in complete control and the system remains deterministic, it is discarded. We prioritize the "Depth of Integrity" over the "Breadth of Features".
+
 ---
 
 ## 1. Introduction
@@ -71,11 +77,12 @@ graph TD
 7. Toggle between Light and Dark visual themes
 8. Persist tasks and theme preferences across sessions
 
-### 2.3 User Characteristics
+### 2.2 User Classes & Characteristics
 
-**Target User**: 
-- Individual knowledge worker
-- Needs simple, reliable task tracking
+The primary user of **ZERO-TASK** is the **Sovereign Individual**:
+- **Privacy Driven**: Users who demand that their productivity data never touches a third-party server.
+- **Developer Focused**: Users who appreciate high-integrity, local-first codebases.
+- **Minimalists**: Users who value a focused, high-performance UI over bloated feature sets.
 - Values data sovereignty and privacy
 - Comfortable with modern web applications
 
@@ -105,16 +112,17 @@ graph TD
 
 ## 3. System Features
 
-### 3.1 Task Management
+### 3.1 Task Management (FR-1 to FR-4)
+These requirements form the "Atomic Unit" of the application. The system must treat every task as an immutable record of intent until explicitly modified by the user.
 
 #### 3.1.1 Feature: Create Task
 
 **Description**: User can create a new task with title and optional description.
 
 **Functional Requirements**:
-- **FR-1.1**: System SHALL provide a form with title and description inputs
+- **FR-1.1**: The system MUST allow the creation of tasks with a title and optional description.
 - **FR-1.2**: System SHALL require a non-empty title
-- **FR-1.3**: System SHALL generate a unique UUID for each task
+- **FR-1.3**: IDs MUST be universally unique (UUID) to prevent local state collisions.
 - **FR-1.4**: System SHALL set status to "PENDING" by default
 - **FR-1.5**: System SHALL record creation timestamp
 - **FR-1.6**: System SHALL add new tasks to the top of the list
@@ -129,7 +137,7 @@ graph TD
 **Description**: User can mark tasks as complete or incomplete.
 
 **Functional Requirements**:
-- **FR-2.1**: System SHALL display a checkbox for each task
+- **FR-2.1**: Toggling completion MUST be a simple, binary state flip.
 - **FR-2.2**: System SHALL toggle status between PENDING and COMPLETED on checkbox click
 - **FR-2.3**: System SHALL apply visual styling to completed tasks (strikethrough, reduced opacity)
 

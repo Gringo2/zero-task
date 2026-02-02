@@ -1,12 +1,16 @@
 # System Architecture
 
-## Overview
+## 📜 The Technical Manifesto
 
-**ZERO-TASK** is a production-grade task management application built on "System Zero" engineering principles, emphasizing **auditability**, **containment**, and **deterministic behavior**.
+**ZERO-TASK** is not merely a utility; it is a manifestation of the **System Zero** engineering doctrine. This architecture is designed under the premise that software should be **auditable**, **contained**, **deterministic**, and **sovereign**. 
 
-## Architecture Style
+We reject the "black-box" nature of modern cloud-dependent applications. Here, every byte is accounted for, every state change is traceable, and the user remains the sole owner of their data. The architecture documented below is the blueprint for this high-integrity digital environment.
 
-**Single Page Application (SPA)** with a **Composition Root** pattern and **Local-First** data persistence.
+## 🏗️ Architectural Style: The Sovereign SPA
+
+ZERO-TASK employs a **Single Page Application (SPA)** architecture, but with a critical distinction: it is a **Sovereign Application**. 
+
+Unlike traditional SPAs that act as "dumb shells" for remote APIs, ZERO-TASK is a "thick client" that handles its own persistence, business logic, and state synchronization locally. It utilizes a **Composition Root** pattern to ensure that the application's entry point is the single source of truth for both state and dependency orchestration.
 
 ## High-Level Architecture
 
@@ -21,9 +25,9 @@ subgraph "Client Layer"
         App[App.tsx<br/>Composition Root]
     end
     
-    subgraph "State Management"
-        UseTasks[useTasks Hook<br/>Task Logic]
-        UseTheme[useTheme Hook<br/>Theme Logic]
+    subgraph "State Management (The Core Engine)"
+        UseTasks["useTasks Hook<br/>Task Logic Engine"]
+        UseTheme["useTheme Hook<br/>Visual Presentation Logic"]
     end
     
     subgraph "UI Components"
@@ -49,7 +53,9 @@ subgraph "Client Layer"
     UseTheme <--> LocalStorage
 ```
 
-## Component Hierarchy
+## 🧩 Component Hierarchy: The Composition Layer
+
+The **Composition Root** (represented by `App.tsx`) is the heart of the application. It doesn't just render components; it **composes** them by injecting the necessary state and logic from our custom hooks. This ensures a clean separation between the "Presentational" layer (UI) and the "Motivational" layer (Logic).
 
 ```mermaid
 graph TD
@@ -76,7 +82,11 @@ graph TD
     style TaskItem fill:#2d3748,stroke:#48bb78,stroke-width:1px,color:#fff
 ```
 
-## State Flow Architecture
+## 🔄 State Flow: The Reactive Loop
+
+The life of the application is a predictable, deterministic cycle. We use a **Unidirectional Data Flow** combined with a **Persistent Shadow State** in `localStorage`. 
+
+Every user action triggers a state mutation, which is immediately followed by a synchronous serialization to disk and a React-driven re-render. This ensures that the UI never drifts from the underlying data, making the system essentially "crash-proof" regarding data loss.
 
 ```mermaid
 stateDiagram-v2
@@ -99,8 +109,8 @@ stateDiagram-v2
     }
     
     UserAction --> StateUpdate: Callback Invoked
-    StateUpdate --> PersistToStorage: localStorage.setItem()
-    PersistToStorage --> ReRender: React Re-render
+    StateUpdate --> PersistToStorage: localStorageSync
+    PersistToStorage --> ReRender: React Lifecycle
     ReRender --> Ready
     
     Ready --> [*]: App Unmount

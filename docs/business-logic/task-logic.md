@@ -1,6 +1,10 @@
-# Task Management Logic
+# Task Management Logic: The Atomic Units
 
-This document details the business rules and state transitions for task lifecycle management in **ZERO-TASK**.
+This document details the business rules and state transitions for task lifecycle management. In **ZERO-TASK**, a task is not just a string; it is an **Atomic Unit of Intent**.
+
+## 🧩 Conceptual Alignment
+- **Immutability**: Every task update produces a new object reference, adhering to the "System Zero" principle of deterministic state transitions.
+- **Traceability**: Each task carries its own metadata (ID, Timestamp), ensuring it remains a discrete, auditable record.
 
 ## Functional Mapping
 | Requirement | logic Description | Implementation Reference |

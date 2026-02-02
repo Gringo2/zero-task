@@ -1,6 +1,10 @@
 # Discovery Logic: Filtering & Search
 
-This document outlines the logic for data discovery within the **ZERO-TASK** engine.
+This document outlines the logic for data discovery within the **ZERO-TASK** engine. Discovery is the mechanism by which the **Sovereign Individual** navigates their local data lake.
+
+## 🧩 Conceptual Alignment
+- **Reactive Loop**: Discovery logic is additive and reactive. The UI is a pure function of the filtered task set.
+- **Case-Insensitive Integrity**: Search assumes a flexible, user-centric matching strategy while maintaining strict data types.
 
 ## Functional Mapping
 | Requirement | Logic Description | Implementation Reference |
@@ -45,10 +49,10 @@ The final visible list results from the intersection of both search and status f
 2. Apply **Status Filter** to the results of step 1.
 
 ```mermaid
-flowchart LR
-    Dataset[Full Task Set] --> Search[Search Filter]
-    Search --> Status[Status Filter]
-    Status --> View[Visible Tasks]
+graph TD
+    Dataset["Full Task Set"] --> Search["Search Filter"]
+    Search --> Status["Status Filter"]
+    Status --> View["Visible Tasks"]
 ```
 
 ### Edge Cases:
