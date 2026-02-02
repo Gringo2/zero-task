@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="src/assets/logo.svg" alt="System Zero Logo" width="120" />
+  <img src="src/assets/logo.svg" alt="Zero Task Logo" width="120" />
 </div>
 
 # ZERO-TASK: The Auditable Task Engine

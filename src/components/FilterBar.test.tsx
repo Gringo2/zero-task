@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { FilterBar, type FilterType } from './FilterBar';
+import { FilterBar } from './FilterBar';
 
 describe('FilterBar Component', () => {
     it('should render all filter buttons', () => {

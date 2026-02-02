@@ -30,7 +30,7 @@ function App() {
       {/* Header Section */}
       <header className="app-header">
         <div className="header-brand">
-          <img src={logo} alt="System Zero Logo" className="app-logo" />
+          <img src={logo} alt="Zero Task Logo" className="app-logo" />
           <div className="header-text">
             <h1 className="logo">ZERO-TASK</h1>
             <p className="subtitle">The Auditable Task Engine</p>

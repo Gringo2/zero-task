@@ -83,7 +83,7 @@
   <path d="M45 125 L125 45 L355 275 L275 355 Z" fill="white" fill-opacity="0.03" />
 
   <!-- Typography -->
-  <text x="200" y="440" font-family="Arial, sans-serif" font-weight="900" font-size="42" fill="#334155" text-anchor="middle" letter-spacing="4">SYSTEM ZERO</text>
-  <text x="200" y="440" font-family="Arial, sans-serif" font-weight="900" font-size="42" fill="url(#neon_grad)" fill-opacity="0.8" text-anchor="middle" letter-spacing="4" filter="url(#inner_neon)">SYSTEM ZERO</text>
+  <text x="200" y="440" font-family="Arial, sans-serif" font-weight="900" font-size="42" fill="#334155" text-anchor="middle" letter-spacing="4">ZERO TASK</text>
+  <text x="200" y="440" font-family="Arial, sans-serif" font-weight="900" font-size="42" fill="url(#neon_grad)" fill-opacity="0.8" text-anchor="middle" letter-spacing="4" filter="url(#inner_neon)">ZERO TASK</text>
 
 </svg>
