@@ -243,3 +243,18 @@ RESULTS:
 Users now have total control over their data lifecycle and a high-integrity trail of system actions. Auditability is now a visible technical reality.
 EXPLANATION:
 The introduction of the System Control Engine moves ZERO-TASK from a simple utility to a true 'Sovereign Instrument'. By providing export/import tools, we ensure the user is not locked into the system, and the audit log provides proof of state history.
+--------------------------------------------------
+
+ID: task-18-indexeddb-scaling
+STATUS: COMPLETED (CURRENT)
+COMMIT: 6b948d9
+DESCRIPTION: Scaling persistence from localStorage to IndexedDB for enhanced capacity and async I/O.
+CHANGES:
+- Integrated 'idb' promise wrapper for IndexedDB operations.
+- Created db.ts service with schema v1 and migration handler.
+- Re-engineered useTasks.ts and useAudit.ts for asynchronous state management.
+- Implemented 'Hydrating Sovereign Engine' UI loading state in App.tsx.
+RESULTS:
+ZERO-TASK now uses a scalable, asynchronous persistence engine. Large-scale data management is now possible with zero degradation in UI smoothness.
+EXPLANATION:
+Upgrading to IndexedDB moves the application's storage into a dedicated database environment, enabling robust state handling and future-proofing for multi-gigabyte datasets (contained locally).

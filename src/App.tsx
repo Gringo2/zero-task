@@ -21,11 +21,12 @@ import { SystemControls } from './components/SystemControls';
  */
 function App() {
   // Initialize Audit Log
-  const { logs, logAction, clearLogs } = useAudit();
+  const { logs, isLoading: isAuditLoading, logAction, clearLogs } = useAudit();
 
   // Initialize State Hooks (Pass logAction to useTasks)
   const {
     tasks,
+    isLoading: isTasksLoading,
     addTask,
     toggleTask,
     deleteTask,
@@ -33,7 +34,7 @@ function App() {
     reorderTasks,
     importTasks,
     clearTasks
-  } = useTasks(logAction);
+  } = useTasks(logAction as any); // Type cast for simplicity during transition
 
   const { theme, toggleTheme } = useTheme();
 
@@ -42,6 +43,8 @@ function App() {
 
   // Search state
   const [searchTerm, setSearchTerm] = useState('');
+
+  const isAppDataLoading = isTasksLoading || isAuditLoading;
 
   return (
     <div className="app-container">
@@ -68,25 +71,34 @@ function App() {
 
       {/* Main Content Area */}
       <main className="app-content">
-        {/* Form to create new tasks */}
-        <TaskForm onAdd={addTask} />
+        {isAppDataLoading ? (
+          <div className="app-loading">
+            <div className="spinner"></div>
+            <p>Hydrating Sovereign Engine...</p>
+          </div>
+        ) : (
+          <>
+            {/* Form to create new tasks */}
+            <TaskForm onAdd={addTask} />
 
-        {/* Search Bar */}
-        <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+            {/* Search Bar */}
+            <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
-        {/* Filter Controls */}
-        <FilterBar currentFilter={filter} onFilterChange={setFilter} />
+            {/* Filter Controls */}
+            <FilterBar currentFilter={filter} onFilterChange={setFilter} />
 
-        {/* List to display and manage existing tasks */}
-        <TaskList
-          tasks={tasks}
-          filter={filter}
-          searchTerm={searchTerm}
-          onToggle={toggleTask}
-          onDelete={deleteTask}
-          onUpdate={updateTask}
-          onReorder={reorderTasks}
-        />
+            {/* List to display and manage existing tasks */}
+            <TaskList
+              tasks={tasks}
+              filter={filter}
+              searchTerm={searchTerm}
+              onToggle={toggleTask}
+              onDelete={deleteTask}
+              onUpdate={updateTask}
+              onReorder={reorderTasks}
+            />
+          </>
+        )}
       </main>
 
       <footer className="app-footer">

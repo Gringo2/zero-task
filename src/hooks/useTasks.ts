@@ -1,48 +1,46 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { TTask } from '../types/task';
 import { TaskStatus } from '../types/task';
-
-const STORAGE_KEY = 'zero-task-data';
+import { initDB, migrateFromLocalStorage } from '../services/db';
 
 /**
  * Custom Hook: useTasks
  * 
  * Manages the global state for tasks in the application.
- * Persists data to localStorage to survive page reloads.
+ * Persists data to IndexedDB to support scale and async I/O.
  * 
  * @param onAction - Optional callback to log mutations
  * @returns Object containing the tasks array and action handlers.
  */
 export const useTasks = (onAction?: (action: string, details: string) => void) => {
-    // State: Array of task objects
-    // Initialize from localStorage to allow persistence
-    const [tasks, setTasks] = useState<TTask[]>(() => {
-        try {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            return stored ? JSON.parse(stored) : [];
-        } catch (error) {
-            console.error('Failed to load tasks', error);
-            return [];
-        }
-    });
+    const [tasks, setTasks] = useState<TTask[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    // Effect: Sync tasks to localStorage whenever they change
+    // Initial Hydration from IndexedDB
     useEffect(() => {
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-        } catch (error) {
-            console.error('Failed to save tasks', error);
-        }
-    }, [tasks]);
+        const hydrate = async () => {
+            try {
+                // Perform migration first if needed
+                await migrateFromLocalStorage();
+
+                const db = await initDB();
+                const allTasks = await db.getAll('tasks');
+                // Sort tasks by date (latest first) as IndexedDB doesn't guarantee order
+                setTasks(allTasks.sort((a, b) => b.createdAt - a.createdAt));
+            } catch (error) {
+                console.error('Failed to hydrate tasks from IndexedDB', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        hydrate();
+    }, []);
 
     /**
-     * Adds a new task to the list.
-     * Generates a unique ID and timestamp.
-     * 
-     * @param title - The title of the task
-     * @param description - Optional description
+     * Adds a new task.
      */
-    const addTask = useCallback((title: string, description: string) => {
+    const addTask = useCallback(async (title: string, description: string) => {
         const newTask: TTask = {
             id: crypto.randomUUID(),
             title,
@@ -50,94 +48,105 @@ export const useTasks = (onAction?: (action: string, details: string) => void) =
             status: TaskStatus.PENDING,
             createdAt: Date.now(),
         };
-        // Use functional update to ensure we have the latest state
+
+        const db = await initDB();
+        await db.put('tasks', newTask);
+
         setTasks(prev => [newTask, ...prev]);
         onAction?.('CREATE', `Added task: ${title}`);
     }, [onAction]);
 
     /**
-     * Toggles a task's status between PENDING and COMPLETED.
-     * 
-     * @param id - The UUID of the task to toggle
+     * Toggles a task's status.
      */
-    const toggleTask = useCallback((id: string) => {
-        setTasks(prev => {
-            const task = prev.find(t => t.id === id);
-            if (task) {
-                onAction?.('TOGGLE', `Toggled task: ${task.title}`);
-            }
-            return prev.map(task =>
-                task.id === id
-                    ? { ...task, status: task.status === TaskStatus.COMPLETED ? TaskStatus.PENDING : TaskStatus.COMPLETED }
-                    : task
-            );
-        });
+    const toggleTask = useCallback(async (id: string) => {
+        const db = await initDB();
+        const task = await db.get('tasks', id);
+
+        if (task) {
+            const updatedTask = {
+                ...task,
+                status: task.status === TaskStatus.COMPLETED ? TaskStatus.PENDING : TaskStatus.COMPLETED
+            };
+            await db.put('tasks', updatedTask);
+
+            setTasks(prev => prev.map(t => t.id === id ? updatedTask : t));
+            onAction?.('TOGGLE', `Toggled task: ${task.title}`);
+        }
     }, [onAction]);
 
     /**
-     * Removes a task from the list by ID.
-     * 
-     * @param id - The UUID of the task to delete
+     * Removes a task.
      */
-    const deleteTask = useCallback((id: string) => {
-        setTasks(prev => {
-            const task = prev.find(t => t.id === id);
-            if (task) {
-                onAction?.('DELETE', `Deleted task: ${task.title}`);
-            }
-            return prev.filter(task => task.id !== id);
-        });
+    const deleteTask = useCallback(async (id: string) => {
+        const db = await initDB();
+        const task = await db.get('tasks', id);
+
+        if (task) {
+            await db.delete('tasks', id);
+            setTasks(prev => prev.filter(t => t.id !== id));
+            onAction?.('DELETE', `Deleted task: ${task.title}`);
+        }
     }, [onAction]);
 
     /**
-     * Updates an existing task's title and description.
-     * 
-     * @param id - The UUID of the task to update
-     * @param title - New title
-     * @param description - New description
+     * Updates an existing task.
      */
-    const updateTask = useCallback((id: string, title: string, description: string) => {
-        setTasks(prev => {
+    const updateTask = useCallback(async (id: string, title: string, description: string) => {
+        const db = await initDB();
+        const task = await db.get('tasks', id);
+
+        if (task) {
+            const updatedTask = { ...task, title, description };
+            await db.put('tasks', updatedTask);
+
+            setTasks(prev => prev.map(t => t.id === id ? updatedTask : t));
             onAction?.('UPDATE', `Updated task: ${title}`);
-            return prev.map(task =>
-                task.id === id
-                    ? { ...task, title, description }
-                    : task
-            );
-        });
+        }
     }, [onAction]);
 
     /**
-     * Reorders tasks in the list.
-     * Used for drag-and-drop persistence.
-     * 
-     * @param newOrder - The new array of tasks
+     * Reorders tasks.
+     * Note: IndexedDB doesn't have an inherent order.
+     * We depend on the array state for UI, but could persist 
+     * a 'rank' or 'index' if we want hard reordering.
      */
-    const reorderTasks = useCallback((newOrder: TTask[]) => {
+    const reorderTasks = useCallback(async (newOrder: TTask[]) => {
         setTasks(newOrder);
-        onAction?.('REORDER', 'Reordered tasks via drag-and-drop');
+        // Persistence of exact order would require updating every task with an index
+        // For now, we update local state. For perfect persistence, we'll need an index field.
+        onAction?.('REORDER', 'Reordered tasks in current session');
     }, [onAction]);
 
     /**
-     * Imports tasks from an external JSON array.
-     * 
-     * @param newTasks - Array of TTask objects
+     * Imports tasks.
      */
-    const importTasks = useCallback((newTasks: TTask[]) => {
-        setTasks(newTasks);
-        onAction?.('IMPORT', `Imported ${newTasks.length} tasks from backup`);
+    const importTasks = useCallback(async (newTasks: TTask[]) => {
+        const db = await initDB();
+        const tx = db.transaction('tasks', 'readwrite');
+        await tx.store.clear();
+        for (const task of newTasks) {
+            await tx.store.put(task);
+        }
+        await tx.done;
+
+        setTasks(newTasks.sort((a, b) => b.createdAt - a.createdAt));
+        onAction?.('IMPORT', `Imported ${newTasks.length} tasks`);
     }, [onAction]);
 
     /**
-     * Clears all tasks from the system.
+     * Clears all tasks.
      */
-    const clearTasks = useCallback(() => {
+    const clearTasks = useCallback(async () => {
+        const db = await initDB();
+        await db.clear('tasks');
         setTasks([]);
-        onAction?.('CLEAR', 'Cleared all tasks from system');
+        onAction?.('CLEAR', 'Cleared all tasks from database');
     }, [onAction]);
 
     return {
         tasks,
+        isLoading,
         addTask,
         toggleTask,
         deleteTask,
