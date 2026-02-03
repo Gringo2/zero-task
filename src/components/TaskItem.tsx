@@ -1,14 +1,19 @@
+import { useState, forwardRef, useImperativeHandle } from 'react';
 import type { TTask } from '../types/task';
 import { TaskStatus } from '../types/task';
-import { useState } from 'react';
 import './TaskItem.css';
 import { Reorder, motion, useMotionValue } from 'framer-motion';
+
+export interface TaskItemHandle {
+    setEditing: (editing: boolean) => void;
+}
 
 interface TaskItemProps {
     task: TTask;
     onToggle: (id: string) => void;
     onDelete: (id: string) => void;
     onUpdate: (id: string, title: string, description: string) => void;
+    isSelected?: boolean;
     isDragEnabled?: boolean;
 }
 
@@ -16,9 +21,15 @@ interface TaskItemProps {
  * Component: TaskItem
  * 
  * Renders a single task card with animations.
- * Supports drag reordering via Framer Motion.
  */
-export const TaskItem = ({ task, onToggle, onDelete, onUpdate, isDragEnabled = false }: TaskItemProps) => {
+export const TaskItem = forwardRef<TaskItemHandle, TaskItemProps>(({
+    task,
+    onToggle,
+    onDelete,
+    onUpdate,
+    isSelected = false,
+    isDragEnabled = false
+}, ref) => {
     const isCompleted = task.status === TaskStatus.COMPLETED;
     const y = useMotionValue(0);
 
@@ -26,6 +37,12 @@ export const TaskItem = ({ task, onToggle, onDelete, onUpdate, isDragEnabled = f
     const [isEditing, setIsEditing] = useState(false);
     const [editTitle, setEditTitle] = useState(task.title);
     const [editDesc, setEditDesc] = useState(task.description);
+
+    useImperativeHandle(ref, () => ({
+        setEditing: (editing: boolean) => {
+            setIsEditing(editing);
+        }
+    }));
 
     const handleSave = () => {
         if (editTitle.trim()) {
@@ -46,7 +63,7 @@ export const TaskItem = ({ task, onToggle, onDelete, onUpdate, isDragEnabled = f
             id={task.id}
             style={{ y }}
             dragListener={isDragEnabled}
-            className={`task-item ${isCompleted ? 'completed' : ''}`}
+            className={`task-item ${isCompleted ? 'completed' : ''} ${isSelected ? 'keyboard-selected' : ''}`}
             initial={{ opacity: 0, scale: 0.9, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
@@ -128,4 +145,4 @@ export const TaskItem = ({ task, onToggle, onDelete, onUpdate, isDragEnabled = f
             </div>
         </Reorder.Item>
     );
-};
+});

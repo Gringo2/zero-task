@@ -1,29 +1,28 @@
 import './App.css';
-import { TaskForm } from './components/TaskForm';
+import { TaskForm, type TaskFormHandle } from './components/TaskForm';
 import { TaskList } from './components/TaskList';
 import { FilterBar, type FilterType } from './components/FilterBar';
-import { SearchBar } from './components/SearchBar';
+import { SearchBar, type SearchBarHandle } from './components/SearchBar';
 import { useTasks } from './hooks/useTasks';
-import { useState } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 
 import logo from './assets/logo.svg';
 import { useTheme } from './hooks/useTheme';
 import { ThemeToggle } from './components/ThemeToggle';
 import { useAudit } from './hooks/useAudit';
 import { SystemControls } from './components/SystemControls';
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
+import { ShortcutsLegend } from './components/ShortcutsLegend';
+import { type TaskItemHandle } from './components/TaskItem';
 
 /**
  * Root Component (App)
- * 
- * Acts as the "Composition Root" for the application.
- * Initializes the global state (useTasks, useTheme, useAudit)
- * and passes it down to child components.
  */
 function App() {
   // Initialize Audit Log
   const { logs, isLoading: isAuditLoading, logAction, clearLogs } = useAudit();
 
-  // Initialize State Hooks (Pass logAction to useTasks)
+  // Initialize State Hooks
   const {
     tasks,
     isLoading: isTasksLoading,
@@ -34,21 +33,91 @@ function App() {
     reorderTasks,
     importTasks,
     clearTasks
-  } = useTasks(logAction as any); // Type cast for simplicity during transition
+  } = useTasks(logAction as any);
 
   const { theme, toggleTheme } = useTheme();
 
-  // Filter state
+  // Navigation & Search state
   const [filter, setFilter] = useState<FilterType>('all');
-
-  // Search state
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Keyboard Sovereignty State
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+
+  // Refs for Imperative Control
+  const taskFormRef = useRef<TaskFormHandle>(null);
+  const searchBarRef = useRef<SearchBarHandle>(null);
+  const taskRefs = useRef(new Map<string, TaskItemHandle>());
 
   const isAppDataLoading = isTasksLoading || isAuditLoading;
 
+  // Derived: Filtered tasks for navigation
+  const filteredTasks = useMemo(() => {
+    let list = tasks;
+    if (searchTerm.trim()) {
+      const lower = searchTerm.toLowerCase();
+      list = list.filter(t => t.title.toLowerCase().includes(lower) || t.description.toLowerCase().includes(lower));
+    }
+    if (filter === 'active') list = list.filter(t => t.status === 'PENDING');
+    else if (filter === 'completed') list = list.filter(t => t.status === 'COMPLETED');
+    return list;
+  }, [tasks, searchTerm, filter]);
+
+  const selectedTask = selectedIndex !== null ? filteredTasks[selectedIndex] : null;
+
+  // Keyboard Event Handlers
+  useKeyboardShortcuts({
+    onSearch: () => {
+      setSelectedIndex(null);
+      searchBarRef.current?.focus();
+    },
+    onNewTask: () => {
+      setSelectedIndex(null);
+      taskFormRef.current?.focus();
+    },
+    onMoveSelection: (direction) => {
+      if (filteredTasks.length === 0) return;
+      if (selectedIndex === null) {
+        setSelectedIndex(direction === 'down' ? 0 : filteredTasks.length - 1);
+        return;
+      }
+      const nextIndex = direction === 'down'
+        ? (selectedIndex + 1) % filteredTasks.length
+        : (selectedIndex - 1 + filteredTasks.length) % filteredTasks.length;
+      setSelectedIndex(nextIndex);
+    },
+    onToggleStatus: () => {
+      if (selectedTask) toggleTask(selectedTask.id);
+    },
+    onDelete: () => {
+      if (selectedTask) {
+        deleteTask(selectedTask.id);
+        setSelectedIndex(null);
+      }
+    },
+    onEdit: () => {
+      if (selectedTask) {
+        taskRefs.current.get(selectedTask.id)?.setEditing(true);
+      }
+    },
+    onEscape: () => {
+      setSelectedIndex(null);
+      setSearchTerm('');
+      setShowShortcuts(false);
+      // Blur any active element
+      (document.activeElement as HTMLElement)?.blur();
+    },
+    onToggleHelp: () => setShowShortcuts(prev => !prev)
+  });
+
+  const handleTaskRef = useCallback((id: string, handle: TaskItemHandle | null) => {
+    if (handle) taskRefs.current.set(id, handle);
+    else taskRefs.current.delete(id);
+  }, []);
+
   return (
     <div className="app-container">
-      {/* Header Section */}
       <header className="app-header">
         <div className="header-brand">
           <img src={logo} alt="Zero Task Logo" className="app-logo" />
@@ -69,7 +138,6 @@ function App() {
         </div>
       </header>
 
-      {/* Main Content Area */}
       <main className="app-content">
         {isAppDataLoading ? (
           <div className="app-loading">
@@ -78,28 +146,25 @@ function App() {
           </div>
         ) : (
           <>
-            {/* Form to create new tasks */}
-            <TaskForm onAdd={addTask} />
-
-            {/* Search Bar */}
-            <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-
-            {/* Filter Controls */}
+            <TaskForm ref={taskFormRef} onAdd={addTask} />
+            <SearchBar ref={searchBarRef} searchTerm={searchTerm} onSearchChange={setSearchTerm} />
             <FilterBar currentFilter={filter} onFilterChange={setFilter} />
-
-            {/* List to display and manage existing tasks */}
             <TaskList
               tasks={tasks}
               filter={filter}
               searchTerm={searchTerm}
+              selectedTaskId={selectedTask?.id}
               onToggle={toggleTask}
               onDelete={deleteTask}
               onUpdate={updateTask}
               onReorder={reorderTasks}
+              onTaskRef={handleTaskRef}
             />
           </>
         )}
       </main>
+
+      <ShortcutsLegend isOpen={showShortcuts} onClose={() => setShowShortcuts(false)} />
 
       <footer className="app-footer">
         <p>Built with System Zero Methodology</p>

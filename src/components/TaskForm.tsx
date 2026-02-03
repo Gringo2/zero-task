@@ -1,17 +1,27 @@
-import { useState } from 'react';
+import { useState, forwardRef, useImperativeHandle, useRef } from 'react';
 import './TaskForm.css';
 
 interface TaskFormProps {
     onAdd: (title: string, description: string) => void;
 }
 
+export interface TaskFormHandle {
+    focus: () => void;
+}
+
 /**
  * Component: TaskForm
  * 
  * Handles user input for creating new tasks.
- * Manages its own local state for the input fields.
  */
-export const TaskForm = ({ onAdd }: TaskFormProps) => {
+export const TaskForm = forwardRef<TaskFormHandle, TaskFormProps>(({ onAdd }, ref) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useImperativeHandle(ref, () => ({
+        focus: () => {
+            inputRef.current?.focus();
+        }
+    }));
     // Local state for form inputs
     const [title, setTitle] = useState('');
     const [desc, setDesc] = useState('');
@@ -35,6 +45,7 @@ export const TaskForm = ({ onAdd }: TaskFormProps) => {
     return (
         <form className="task-form" onSubmit={handleSubmit}>
             <input
+                ref={inputRef}
                 type="text"
                 placeholder="What needs to be done?"
                 value={title}
@@ -53,4 +64,4 @@ export const TaskForm = ({ onAdd }: TaskFormProps) => {
             </button>
         </form>
     );
-};
+});

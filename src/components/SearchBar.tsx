@@ -1,3 +1,4 @@
+import { forwardRef, useImperativeHandle, useRef } from 'react';
 import './SearchBar.css';
 
 interface SearchBarProps {
@@ -5,18 +6,29 @@ interface SearchBarProps {
     onSearchChange: (term: string) => void;
 }
 
+export interface SearchBarHandle {
+    focus: () => void;
+}
+
 /**
  * Component: SearchBar
  * 
  * Renders a search input for filtering tasks.
- * Provides instant search with live filtering.
  */
-export const SearchBar = ({ searchTerm, onSearchChange }: SearchBarProps) => {
+export const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(({ searchTerm, onSearchChange }, ref) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useImperativeHandle(ref, () => ({
+        focus: () => {
+            inputRef.current?.focus();
+        }
+    }));
     return (
         <div className="search-bar">
             <div className="search-input-wrapper">
                 <span className="search-icon">🔍</span>
                 <input
+                    ref={inputRef}
                     type="text"
                     value={searchTerm}
                     onChange={(e) => onSearchChange(e.target.value)}
@@ -35,4 +47,4 @@ export const SearchBar = ({ searchTerm, onSearchChange }: SearchBarProps) => {
             </div>
         </div>
     );
-};
+});

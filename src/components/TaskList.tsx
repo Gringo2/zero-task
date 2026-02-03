@@ -1,6 +1,6 @@
 import type { TTask } from '../types/task';
 import { TaskStatus } from '../types/task';
-import { TaskItem } from './TaskItem';
+import { TaskItem, type TaskItemHandle } from './TaskItem';
 import type { FilterType } from './FilterBar';
 import './TaskList.css';
 import { AnimatePresence, Reorder } from 'framer-motion';
@@ -9,20 +9,31 @@ interface TaskListProps {
     tasks: TTask[];
     filter: FilterType;
     searchTerm: string;
+    selectedTaskId?: string;
     onToggle: (id: string) => void;
     onDelete: (id: string) => void;
     onUpdate: (id: string, title: string, description: string) => void;
     onReorder: (newOrder: TTask[]) => void;
+    onTaskRef?: (id: string, handle: TaskItemHandle | null) => void;
 }
 
 /**
  * Component: TaskList
  * 
  * Renders the list of tasks with Framer Motion animations.
- * Supports drag-and-drop reordering when no filter/search is active.
  */
-export const TaskList = ({ tasks, filter, searchTerm, onToggle, onDelete, onUpdate, onReorder }: TaskListProps) => {
-    // Filter tasks by search term first
+export const TaskList = ({
+    tasks,
+    filter,
+    searchTerm,
+    selectedTaskId,
+    onToggle,
+    onDelete,
+    onUpdate,
+    onReorder,
+    onTaskRef
+}: TaskListProps) => {
+    // Filter tasks
     let filteredTasks = tasks;
 
     if (searchTerm.trim()) {
@@ -33,14 +44,12 @@ export const TaskList = ({ tasks, filter, searchTerm, onToggle, onDelete, onUpda
         );
     }
 
-    // Then filter by status
     if (filter === 'active') {
         filteredTasks = filteredTasks.filter(task => task.status === TaskStatus.PENDING);
     } else if (filter === 'completed') {
         filteredTasks = filteredTasks.filter(task => task.status === TaskStatus.COMPLETED);
     }
 
-    // We only allow reordering if we are viewing "All" tasks without a search term
     const isReorderEnabled = filter === 'all' && !searchTerm.trim();
 
     if (filteredTasks.length === 0) {
@@ -62,7 +71,9 @@ export const TaskList = ({ tasks, filter, searchTerm, onToggle, onDelete, onUpda
                 {filteredTasks.map((task) => (
                     <TaskItem
                         key={task.id}
+                        ref={(handle) => onTaskRef?.(task.id, handle)}
                         task={task}
+                        isSelected={task.id === selectedTaskId}
                         onToggle={onToggle}
                         onDelete={onDelete}
                         onUpdate={onUpdate}
