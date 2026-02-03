@@ -15,5 +15,9 @@
     "dev": "npm run db:up && npm run server:dev & npm run web:dev",
     "test": "npm test --workspaces",
     "docs:serve": "powershell -ExecutionPolicy Bypass -File scripts/serve-docs.ps1"
+  },
+  "dependencies": {
+    "hono": "^4.11.7",
+    "zod": "^3.24.1"
   }
 }

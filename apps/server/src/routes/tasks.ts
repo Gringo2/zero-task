@@ -3,33 +3,44 @@ import { Hono } from 'hono';
 import { db } from '../db';
 import { tasks } from '../db/schema';
 import { eq, desc } from 'drizzle-orm';
-import { z } from 'zod'; // We should use Zod for validation
-import { zValidator } from '@hono/zod-validator';
+import { z } from 'zod';
 import { TaskStatus } from '@zero-task/shared';
 
 const taskRoutes = new Hono();
 
-// GET /tasks - List all tasks (Eventually filtered by user/project)
+// GET /tasks - List all tasks
 taskRoutes.get('/', async (c) => {
     const allTasks = await db.select().from(tasks).orderBy(desc(tasks.createdAt));
     return c.json(allTasks);
 });
 
-// POST /tasks - Create a new task
-taskRoutes.post('/', zValidator('json', z.object({
+const taskSchema = z.object({
     title: z.string().min(1),
     description: z.string().optional()
-})), async (c) => {
-    const { title, description } = c.req.valid('json');
+});
 
-    // Defaulting to PENDING status
-    const newTask = await db.insert(tasks).values({
-        title,
-        description,
-        status: TaskStatus.PENDING
-    }).returning();
+// POST /tasks - Create a new task
+taskRoutes.post('/', async (c) => {
+    try {
+        const body = await c.req.json();
+        const result = taskSchema.safeParse(body);
 
-    return c.json(newTask[0], 201);
+        if (!result.success) {
+            return c.json({ error: result.error }, 400);
+        }
+
+        const { title, description } = result.data;
+
+        const newTask = await db.insert(tasks).values({
+            title,
+            description,
+            status: TaskStatus.PENDING
+        }).returning();
+
+        return c.json(newTask[0], 201);
+    } catch (e) {
+        return c.json({ error: 'Invalid JSON body' }, 400);
+    }
 });
 
 // PATCH /tasks/:id/toggle - Toggle task status
