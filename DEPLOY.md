@@ -25,24 +25,20 @@ This guide details how to deploy **ZERO-TASK** as two separate services on [Rend
 1.  Click **New +** -> **Web Service**.
 2.  Connect your GitHub repository.
 3.  **Name**: `zero-task-server`
-4.  **Root Directory**: `.` (leave empty or use default)
-5.  **Runtime**: `Node`
-6.  **Build Command**:
-    ```bash
-    npm install && npm run build -w apps/server
-    ```
-7.  **Start Command**:
-    ```bash
-    node apps/server/dist/index.js
-    ```
-8.  **Environment Variables**:
+4.  **Root Directory**: `.`
+5.  **Runtime**: `Docker` *(Render will auto-detect the root Dockerfile)*
+6.  **Environment Variables**:
     - `DATABASE_URL`: *(Paste the PostgreSQL URL from Step 2)*
     - `BETTER_AUTH_SECRET`: *(Generate a long random string)*
     - `BETTER_AUTH_URL`: `https://your-backend-service-name.onrender.com`
     - `FRONTEND_URL`: `https://your-frontend-service-name.onrender.com` *(You will get this URL in Step 4)*.
     - `NODE_ENV`: `production`
 
-9.  Click **Create Web Service**.
+7.  Click **Create Web Service**.
+
+Alternatively, if you prefer the **Node Runtime**:
+- **Build Command**: `npm install && npm run build -w apps/server`
+- **Start Command**: `node apps/server/dist/index.js`
 
 ## 4. Deploy the Frontend (Static Site)
 
