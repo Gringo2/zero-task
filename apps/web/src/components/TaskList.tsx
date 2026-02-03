@@ -1,5 +1,4 @@
-import type { TTask } from '../types/task';
-import { TaskStatus } from '../types/task';
+import { type TTask, TaskStatus } from '@zero-task/shared';
 import { TaskItem, type TaskItemHandle } from './TaskItem';
 import type { FilterType } from './FilterBar';
 import './TaskList.css';

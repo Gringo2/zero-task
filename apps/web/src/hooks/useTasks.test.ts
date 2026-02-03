@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useTasks } from './useTasks';
+import { TaskStatus } from '@zero-task/shared';
 
 describe('useTasks Hook', () => {
     beforeEach(() => {
@@ -22,7 +23,7 @@ describe('useTasks Hook', () => {
 
         expect(result.current.tasks).toHaveLength(1);
         expect(result.current.tasks[0].title).toBe('New Task');
-        expect(result.current.tasks[0].status).toBe('PENDING');
+        expect(result.current.tasks[0].status).toBe(TaskStatus.PENDING);
     });
 
     it('should toggle a task status', () => {
@@ -38,13 +39,13 @@ describe('useTasks Hook', () => {
             result.current.toggleTask(taskId);
         });
 
-        expect(result.current.tasks[0].status).toBe('COMPLETED');
+        expect(result.current.tasks[0].status).toBe(TaskStatus.COMPLETED);
 
         act(() => {
             result.current.toggleTask(taskId);
         });
 
-        expect(result.current.tasks[0].status).toBe('PENDING');
+        expect(result.current.tasks[0].status).toBe(TaskStatus.PENDING);
     });
 
     it('should delete a task', () => {
@@ -83,7 +84,7 @@ describe('useTasks Hook', () => {
             id: '123',
             title: 'Hydrated Task',
             description: '',
-            status: 'PENDING',
+            status: TaskStatus.PENDING,
             createdAt: 12345
         }];
         localStorage.setItem('zero-task-data', JSON.stringify(initialData));

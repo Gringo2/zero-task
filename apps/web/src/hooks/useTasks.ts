@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { TTask } from '../types/task';
-import { TaskStatus } from '../types/task';
+import { type TTask, TaskStatus } from '@zero-task/shared';
 import { initDB, migrateFromLocalStorage } from '../services/db';
 
 /**

@@ -1,6 +1,5 @@
 import { openDB, type IDBPDatabase } from 'idb';
-import type { TTask } from '../types/task';
-import type { AuditEntry } from '../hooks/useAudit';
+import { type TTask, type AuditEntry } from '@zero-task/shared';
 
 const DB_NAME = 'zero-task-db';
 const DB_VERSION = 1;

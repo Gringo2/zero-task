@@ -1,14 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
+import { type AuditAction, type AuditEntry } from '@zero-task/shared';
 import { initDB } from '../services/db';
-
-export type AuditAction = 'CREATE' | 'TOGGLE' | 'DELETE' | 'UPDATE' | 'REORDER' | 'IMPORT' | 'CLEAR' | 'AUTH' | 'SESSION_CLEAR';
-
-export interface AuditEntry {
-    id: string;
-    action: AuditAction;
-    timestamp: number;
-    details: string;
-}
 
 const MAX_LOG_ENTRIES = 50;
 

@@ -1,6 +1,15 @@
 services:
-  app:
-    build: .
+  postgres:
+    image: postgres:16-alpine
+    container_name: zero-task-db
+    environment:
+      POSTGRES_USER: zero_user
+      POSTGRES_PASSWORD: zero_password
+      POSTGRES_DB: zero_task
     ports:
-      - "8080:80"
-    restart: always
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { TTask } from '../types/task';
-import type { AuditEntry } from '../hooks/useAudit';
+import { type TTask, type AuditEntry } from '@zero-task/shared';
 import './SystemControls.css';
 
 interface SystemControlsProps {

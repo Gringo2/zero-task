@@ -4,36 +4,37 @@
 
 # ZERO-TASK: The Auditable Task Engine
 
-![System Zero Social Preview](public/og-image.png)
+Zero-Task is a professional-grade, multi-user task management platform built with a **Sovereign Monorepo** architecture. It follows the "System Zero" methodology, emphasizing auditability, deterministic state, and containment.
 
-Zero-Task is a lightweight, single-page task management application built with **React 19**, **TypeScript**, and **Vite**. It follows the "System Zero" methodology, emphasizing auditability, deterministic state, and containment.
+## 🏗️ Architecture (Monorepo)
+
+- **`apps/web`**: React 19 + Vite frontend. Glassmorphism UI with Framer Motion.
+- **`apps/server`**: Hono API engine. High-performance, TypeScript-native.
+- **`packages/shared`**: Shared domain types and logic (Single Source of Truth).
+- **`Infrastructure`**: PostgreSQL + Better Auth for secure, collaborative state.
 
 ## Features
 
-- **Auditability**: All actions (Add, Edit, Toggle, Delete) are tracked and verifiable.
-- **Persistence**: Automatic state hydration and saving to browser `localStorage`.
-- **Search & Filtering**: Live search by title/description and status filtering (All/Active/Completed).
-- **Glassmorphism UI**: Premium dark-mode aesthetic with modern CSS tokens.
+- **Multi-User Collaboration**: Assign tasks to users and group them into projects.
+- **Auditability**: All actions (Add, Edit, Toggle, Delete, Assign) are tracked and verifiable in a centralized audit table.
+- **Sovereign Persistence**: PostgreSQL database for robust, relational data storage.
+- **Better Auth**: Professional-grade authentication with support for Social, Email, and Passkeys.
 - **Testing**: Comprehensive test suite using Vitest and React Testing Library.
 
 ## Getting Started
 
 ### Local Development
 
-1. **Install Dependencies**:
+1. **Prerequisites**: [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed.
+2. **Setup Workspaces**:
    ```bash
-   npm install
+   npm install --legacy-peer-deps
    ```
-
-2. **Run Dev Server**:
+3. **Run Dev Environment**:
    ```bash
    npm run dev
    ```
-
-3. **Run Tests**:
-   ```bash
-   npm run test
-   ```
+   *This command starts PostgreSQL (Docker), the Hono Server, and the Vite Frontend simultaneously.*
 
 ### Production Deployment (Containment)
 
@@ -94,6 +95,6 @@ The application uses a **Composition Root** pattern in `App.tsx`, with a custom 
 ## System Zero Principles
 
 This project serves as a proof-of-concept for "System Zero" engineering:
-1. **Self-Contained**: No external database required (Client-side sovereignty).
-2. **Auditable**: Simple, readable code with 100% logic coverage.
-3. **Immutable History**: Logic preserved through Git commits and tracking logs.
+1. **Sovereign Architecture**: Multi-user capability without sacrificing performance.
+2. **Auditable Integrity**: End-to-end type safety between Frontend and Backend via shared types.
+3. **Portable Containment**: Docker-first infrastructure for deterministic deployments.

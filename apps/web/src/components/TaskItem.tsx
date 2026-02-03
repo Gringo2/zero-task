@@ -1,6 +1,5 @@
 import { useState, forwardRef, useImperativeHandle } from 'react';
-import type { TTask } from '../types/task';
-import { TaskStatus } from '../types/task';
+import { type TTask, TaskStatus } from '@zero-task/shared';
 import './TaskItem.css';
 import { Reorder, motion, useMotionValue } from 'framer-motion';
 

@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "strict": true,
+        "composite": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "outDir": "./dist",
+        "isolatedModules": true
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "references": [
+        {
+            "path": "../../packages/shared"
+        }
+    ]
+}
