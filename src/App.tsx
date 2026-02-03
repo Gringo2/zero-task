@@ -15,14 +15,26 @@ import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { ShortcutsLegend } from './components/ShortcutsLegend';
 import { type TaskItemHandle } from './components/TaskItem';
 
+import { useAuth } from './hooks/useAuth';
+import { AuthScreen } from './components/AuthScreen';
+
 /**
  * Root Component (App)
  */
 function App() {
+  // Initialize Auth
+  const {
+    isAuthenticated,
+    isSetupRequired,
+    isLoading: isAuthLoading,
+    setupPasscode,
+    login
+  } = useAuth();
+
   // Initialize Audit Log
   const { logs, isLoading: isAuditLoading, logAction, clearLogs } = useAudit();
 
-  // Initialize State Hooks
+  // ... rest of hooks
   const {
     tasks,
     isLoading: isTasksLoading,
@@ -50,7 +62,21 @@ function App() {
   const searchBarRef = useRef<SearchBarHandle>(null);
   const taskRefs = useRef(new Map<string, TaskItemHandle>());
 
-  const isAppDataLoading = isTasksLoading || isAuditLoading;
+  const isAppDataLoading = isTasksLoading || isAuditLoading || isAuthLoading;
+
+  // Auth Handlers with Logging
+  const handleLogin = async (passcode: string) => {
+    const success = await login(passcode);
+    if (success) {
+      logAction('AUTH', 'Sovereign session authorized.');
+    }
+    return success;
+  };
+
+  const handleSetup = async (passcode: string) => {
+    await setupPasscode(passcode);
+    logAction('AUTH', 'Sovereign root-of-trust established.');
+  };
 
   // Derived: Filtered tasks for navigation
   const filteredTasks = useMemo(() => {
@@ -69,15 +95,17 @@ function App() {
   // Keyboard Event Handlers
   useKeyboardShortcuts({
     onSearch: () => {
+      if (!isAuthenticated) return;
       setSelectedIndex(null);
       searchBarRef.current?.focus();
     },
     onNewTask: () => {
+      if (!isAuthenticated) return;
       setSelectedIndex(null);
       taskFormRef.current?.focus();
     },
     onMoveSelection: (direction) => {
-      if (filteredTasks.length === 0) return;
+      if (!isAuthenticated || filteredTasks.length === 0) return;
       if (selectedIndex === null) {
         setSelectedIndex(direction === 'down' ? 0 : filteredTasks.length - 1);
         return;
@@ -88,16 +116,16 @@ function App() {
       setSelectedIndex(nextIndex);
     },
     onToggleStatus: () => {
-      if (selectedTask) toggleTask(selectedTask.id);
+      if (isAuthenticated && selectedTask) toggleTask(selectedTask.id);
     },
     onDelete: () => {
-      if (selectedTask) {
+      if (isAuthenticated && selectedTask) {
         deleteTask(selectedTask.id);
         setSelectedIndex(null);
       }
     },
     onEdit: () => {
-      if (selectedTask) {
+      if (isAuthenticated && selectedTask) {
         taskRefs.current.get(selectedTask.id)?.setEditing(true);
       }
     },
@@ -108,13 +136,36 @@ function App() {
       // Blur any active element
       (document.activeElement as HTMLElement)?.blur();
     },
-    onToggleHelp: () => setShowShortcuts(prev => !prev)
+    onToggleHelp: () => {
+      if (isAuthenticated) setShowShortcuts(prev => !prev);
+    }
   });
 
   const handleTaskRef = useCallback((id: string, handle: TaskItemHandle | null) => {
     if (handle) taskRefs.current.set(id, handle);
     else taskRefs.current.delete(id);
   }, []);
+
+  // Loading State
+  if (isAuthLoading) {
+    return (
+      <div className="app-loading">
+        <div className="spinner"></div>
+        <p>Probing Sovereign Layer...</p>
+      </div>
+    );
+  }
+
+  // Auth Gate
+  if (!isAuthenticated && isSetupRequired !== null) {
+    return (
+      <AuthScreen
+        isSetup={isSetupRequired}
+        onLogin={handleLogin}
+        onSetup={handleSetup}
+      />
+    );
+  }
 
   return (
     <div className="app-container">

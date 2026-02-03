@@ -273,3 +273,18 @@ RESULTS:
 The application is now a professional-grade instrument. Keyboard-driven workflows allow for high-speed task management without the latency of mouse interaction.
 EXPLANATION:
 Keyboard Sovereignty fulfills the 'Tactile Intelligence' doctrine, transforming the SPA from a CRUD tool into a fluid extension of the developer's intent.
+--------------------------------------------------
+
+ID: task-20-sovereign-authentication
+STATUS: COMPLETED (CURRENT)
+COMMIT: df738f7
+DESCRIPTION: Implementing local-first authentication via Web Crypto API and session gating.
+CHANGES:
+- Developed useAuth hook leveraging Browser native Crypto digest (SHA-256).
+- Created high-fidelity glassmorphism 'AuthScreen' for setup and login.
+- Integrated session gating at the Composition Root (App.tsx).
+- Extended audit logging to capture authentication lifecycle events.
+RESULTS:
+The application environment is now secured by a local root-of-trust. User data is protected behind a local passcode without compromising data sovereignty.
+EXPLANATION:
+This milestone fulfills the 'Containment' and 'Sovereignty' doctrines, ensuring the user is the sole arbiter of access to their productivity data.

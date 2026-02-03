@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { initDB } from '../services/db';
 
-export type AuditAction = 'CREATE' | 'TOGGLE' | 'DELETE' | 'UPDATE' | 'REORDER' | 'IMPORT' | 'CLEAR';
+export type AuditAction = 'CREATE' | 'TOGGLE' | 'DELETE' | 'UPDATE' | 'REORDER' | 'IMPORT' | 'CLEAR' | 'AUTH' | 'SESSION_CLEAR';
 
 export interface AuditEntry {
     id: string;

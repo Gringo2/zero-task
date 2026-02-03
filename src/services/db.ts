@@ -10,6 +10,12 @@ export interface DBMetadata {
     value: any;
 }
 
+export interface AuthMetadata {
+    passcodeHash: string;
+    salt: string;
+    isSetup: boolean;
+}
+
 /**
  * Database Schema Definition
  */
@@ -101,4 +107,18 @@ export const migrateFromLocalStorage = async () => {
 
     // Optional: We keep localStorage for one session as safety, 
     // or clear it if confident. Recommendation: Clear after first successful load.
+};
+
+/**
+ * Auth Helpers
+ */
+export const getAuthMetadata = async (): Promise<AuthMetadata | null> => {
+    const db = await initDB();
+    const entry = await db.get('metadata', 'auth_metadata');
+    return entry ? entry.value : null;
+};
+
+export const saveAuthMetadata = async (metadata: AuthMetadata) => {
+    const db = await initDB();
+    await db.put('metadata', { key: 'auth_metadata', value: metadata });
 };
