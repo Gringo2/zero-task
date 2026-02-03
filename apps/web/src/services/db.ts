@@ -6,7 +6,7 @@ const DB_VERSION = 1;
 
 export interface DBMetadata {
     key: string;
-    value: any;
+    value: unknown;
 }
 
 export interface AuthMetadata {
@@ -114,7 +114,7 @@ export const migrateFromLocalStorage = async () => {
 export const getAuthMetadata = async (): Promise<AuthMetadata | null> => {
     const db = await initDB();
     const entry = await db.get('metadata', 'auth_metadata');
-    return entry ? entry.value : null;
+    return entry ? (entry.value as AuthMetadata) : null;
 };
 
 export const saveAuthMetadata = async (metadata: AuthMetadata) => {

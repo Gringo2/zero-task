@@ -1,4 +1,5 @@
 import './App.css';
+import { type AuditAction } from '@zero-task/shared';
 import { TaskForm, type TaskFormHandle } from './components/TaskForm';
 import { TaskList } from './components/TaskList';
 import { FilterBar, type FilterType } from './components/FilterBar';
@@ -46,7 +47,7 @@ function App() {
     reorderTasks,
     importTasks,
     clearTasks
-  } = useTasks(logAction as any);
+  } = useTasks((action, details) => logAction(action as AuditAction, details));
 
   const { theme, toggleTheme } = useTheme();
 

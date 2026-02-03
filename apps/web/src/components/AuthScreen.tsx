@@ -5,7 +5,7 @@ import './AuthScreen.css';
 
 interface AuthScreenProps {
     onLogin: (email: string, password: string) => Promise<boolean>;
-    onSignup: (email: string, password: string, name: string) => Promise<any>;
+    onSignup: (email: string, password: string, name: string) => Promise<{ error?: unknown }>;
 }
 
 /**
