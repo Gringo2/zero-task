@@ -90,11 +90,22 @@ export const useTasks = () => {
         ));
     }, []);
 
+    /**
+     * Reorders tasks in the list.
+     * Used for drag-and-drop persistence.
+     * 
+     * @param newOrder - The new array of tasks
+     */
+    const reorderTasks = useCallback((newOrder: TTask[]) => {
+        setTasks(newOrder);
+    }, []);
+
     return {
         tasks,
         addTask,
         toggleTask,
         deleteTask,
         updateTask,
+        reorderTasks,
     };
 };

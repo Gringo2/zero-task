@@ -3,6 +3,7 @@ import { TaskStatus } from '../types/task';
 import { TaskItem } from './TaskItem';
 import type { FilterType } from './FilterBar';
 import './TaskList.css';
+import { AnimatePresence, Reorder } from 'framer-motion';
 
 interface TaskListProps {
     tasks: TTask[];
@@ -11,15 +12,16 @@ interface TaskListProps {
     onToggle: (id: string) => void;
     onDelete: (id: string) => void;
     onUpdate: (id: string, title: string, description: string) => void;
+    onReorder: (newOrder: TTask[]) => void;
 }
 
 /**
  * Component: TaskList
  * 
- * Renders the list of tasks or an empty state message.
- * Acts as a pure presentational component.
+ * Renders the list of tasks with Framer Motion animations.
+ * Supports drag-and-drop reordering when no filter/search is active.
  */
-export const TaskList = ({ tasks, filter, searchTerm, onToggle, onDelete, onUpdate }: TaskListProps) => {
+export const TaskList = ({ tasks, filter, searchTerm, onToggle, onDelete, onUpdate, onReorder }: TaskListProps) => {
     // Filter tasks by search term first
     let filteredTasks = tasks;
 
@@ -32,32 +34,42 @@ export const TaskList = ({ tasks, filter, searchTerm, onToggle, onDelete, onUpda
     }
 
     // Then filter by status
-    filteredTasks = filteredTasks.filter(task => {
-        if (filter === 'active') return task.status !== TaskStatus.COMPLETED;
-        if (filter === 'completed') return task.status === TaskStatus.COMPLETED;
-        return true; // 'all'
-    });
+    if (filter === 'active') {
+        filteredTasks = filteredTasks.filter(task => task.status === TaskStatus.PENDING);
+    } else if (filter === 'completed') {
+        filteredTasks = filteredTasks.filter(task => task.status === TaskStatus.COMPLETED);
+    }
 
-    // Render empty state if no tasks exist
+    // We only allow reordering if we are viewing "All" tasks without a search term
+    const isReorderEnabled = filter === 'all' && !searchTerm.trim();
+
     if (filteredTasks.length === 0) {
         return (
-            <div className="empty-state">
-                <p>No tasks yet. Add one to get started!</p>
+            <div className="task-list-empty" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                <p>No tasks found.</p>
             </div>
         );
     }
 
     return (
-        <div className="task-list">
-            {filteredTasks.map(task => (
-                <TaskItem
-                    key={task.id}
-                    task={task}
-                    onToggle={onToggle}
-                    onDelete={onDelete}
-                    onUpdate={onUpdate}
-                />
-            ))}
-        </div>
+        <Reorder.Group
+            axis="y"
+            values={tasks}
+            onReorder={isReorderEnabled ? onReorder : () => { }}
+            className="task-list"
+        >
+            <AnimatePresence initial={false} mode='popLayout'>
+                {filteredTasks.map((task) => (
+                    <TaskItem
+                        key={task.id}
+                        task={task}
+                        onToggle={onToggle}
+                        onDelete={onDelete}
+                        onUpdate={onUpdate}
+                        isDragEnabled={isReorderEnabled}
+                    />
+                ))}
+            </AnimatePresence>
+        </Reorder.Group>
     );
 };

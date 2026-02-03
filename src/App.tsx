@@ -19,7 +19,7 @@ import { ThemeToggle } from './components/ThemeToggle';
  */
 function App() {
   // Initialize State Hooks
-  const { tasks, addTask, toggleTask, deleteTask, updateTask } = useTasks();
+  const { tasks, addTask, toggleTask, deleteTask, updateTask, reorderTasks } = useTasks();
   const { theme, toggleTheme } = useTheme();
 
   // Filter state
@@ -63,6 +63,7 @@ function App() {
           onToggle={toggleTask}
           onDelete={deleteTask}
           onUpdate={updateTask}
+          onReorder={reorderTasks}
         />
       </main>
 
