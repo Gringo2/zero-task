@@ -30,11 +30,15 @@
     "noUncheckedSideEffectImports": true
   },
   "include": [
-    "src"
+    "src",
+    "../server/src"
   ],
   "references": [
     {
       "path": "../../packages/shared"
+    },
+    {
+      "path": "../server"
     }
   ]
 }

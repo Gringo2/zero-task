@@ -1,86 +1,53 @@
-import { useState, useCallback, useEffect } from 'react';
-import { getAuthMetadata, saveAuthMetadata, type AuthMetadata } from '../services/db';
-
-/**
- * Utility: Hash passcode with salt using SHA-256
- */
-const hashPasscode = async (passcode: string, salt: string): Promise<string> => {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(passcode + salt);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-};
-
-/**
- * Utility: Generate random salt
- */
-const generateSalt = () => {
-    return Array.from(crypto.getRandomValues(new Uint8Array(16)))
-        .map(b => b.toString(16).padStart(2, '0'))
-        .join('');
-};
+import { useCallback } from 'react';
+import { authClient } from '../lib/auth-client';
 
 /**
  * Hook: useAuth
  * 
- * Manages the local-first authentication lifecycle.
+ * Manages the authentication lifecycle using Better Auth.
  */
 export const useAuth = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isSetupRequired, setIsSetupRequired] = useState<boolean | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const session = authClient.useSession();
+    const isAuthenticated = !!session.data;
+    const isLoading = session.isPending;
 
-    // Initial check
-    useEffect(() => {
-        const checkAuth = async () => {
-            const metadata = await getAuthMetadata();
-            setIsSetupRequired(!metadata || !metadata.isSetup);
-            setIsLoading(false);
-
-            // For developers: If in dev mode and no passcode, auto-auth could be an option, 
-            // but for ZERO-TASK we follow strict doctrine.
-        };
-        checkAuth();
+    // Better Auth handles "setup" via sign-up or early admin creation.
+    // For now, we'll expose a signup method.
+    const signup = useCallback(async (email: string, password: string, name: string) => {
+        const { data, error } = await authClient.signUp.email({
+            email,
+            password,
+            name,
+        });
+        return { data, error };
     }, []);
 
-    const setupPasscode = useCallback(async (passcode: string) => {
-        const salt = generateSalt();
-        const hash = await hashPasscode(passcode, salt);
+    const login = useCallback(async (email: string, password: string): Promise<boolean> => {
+        const { data, error } = await authClient.signIn.email({
+            email,
+            password,
+        });
 
-        const metadata: AuthMetadata = {
-            passcodeHash: hash,
-            salt: salt,
-            isSetup: true
-        };
-
-        await saveAuthMetadata(metadata);
-        setIsSetupRequired(false);
-        setIsAuthenticated(true);
-    }, []);
-
-    const login = useCallback(async (passcode: string): Promise<boolean> => {
-        const metadata = await getAuthMetadata();
-        if (!metadata) return false;
-
-        const attemptHash = await hashPasscode(passcode, metadata.salt);
-        if (attemptHash === metadata.passcodeHash) {
-            setIsAuthenticated(true);
-            return true;
+        if (error) {
+            console.error('Login failed:', error.message);
+            return false;
         }
-        return false;
+
+        return !!data;
     }, []);
 
-    const logout = useCallback(() => {
-        setIsAuthenticated(false);
+    const logout = useCallback(async () => {
+        await authClient.signOut();
     }, []);
 
     return {
         isAuthenticated,
-        isSetupRequired,
+        user: session.data?.user,
         isLoading,
-        setupPasscode,
+        signup,
         login,
-        logout
+        logout,
+        // Keep compatibility with existing UI if needed, or update UI
+        isSetupRequired: false, // We'll handle this differently with multi-user auth
     };
 };

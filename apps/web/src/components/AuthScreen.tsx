@@ -4,19 +4,20 @@ import logo from '../assets/logo.svg';
 import './AuthScreen.css';
 
 interface AuthScreenProps {
-    isSetup: boolean;
-    onLogin: (passcode: string) => Promise<boolean>;
-    onSetup: (passcode: string) => Promise<void>;
+    onLogin: (email: string, password: string) => Promise<boolean>;
+    onSignup: (email: string, password: string, name: string) => Promise<any>;
 }
 
 /**
  * Component: AuthScreen
  * 
- * The gateway to ZERO-TASK. Handles both initial setup and login.
+ * The gateway to ZERO-TASK. Handles multi-user authentication.
  */
-export const AuthScreen = ({ isSetup, onLogin, onSetup }: AuthScreenProps) => {
-    const [passcode, setPasscode] = useState('');
-    const [confirmPasscode, setConfirmPasscode] = useState('');
+export const AuthScreen = ({ onLogin, onSignup }: AuthScreenProps) => {
+    const [isLogin, setIsLogin] = useState(true);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
     const [error, setError] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
 
@@ -25,26 +26,27 @@ export const AuthScreen = ({ isSetup, onLogin, onSetup }: AuthScreenProps) => {
         setError(false);
         setIsProcessing(true);
 
-        if (isSetup) {
-            if (passcode.length < 4) {
-                setError(true);
-                setIsProcessing(false);
-                return;
+        try {
+            if (isLogin) {
+                const success = await onLogin(email, password);
+                if (!success) {
+                    setError(true);
+                }
+            } else {
+                const { error: signUpError } = await onSignup(email, password, name);
+                if (signUpError) {
+                    setError(true);
+                } else {
+                    // Auto switch to login or handle session
+                    setIsLogin(true);
+                }
             }
-            if (passcode !== confirmPasscode) {
-                setError(true);
-                setIsProcessing(false);
-                return;
-            }
-            await onSetup(passcode);
-        } else {
-            const success = await onLogin(passcode);
-            if (!success) {
-                setError(true);
-                setPasscode('');
-            }
+        } catch (err) {
+            console.error('Auth submission error:', err);
+            setError(true);
+        } finally {
+            setIsProcessing(false);
         }
-        setIsProcessing(false);
     };
 
     return (
@@ -57,35 +59,47 @@ export const AuthScreen = ({ isSetup, onLogin, onSetup }: AuthScreenProps) => {
             >
                 <header className="auth-header">
                     <img src={logo} alt="Zero Task" className="auth-logo" />
-                    <h1>{isSetup ? 'Establish Sovereignty' : 'Sovereign Access'}</h1>
-                    <p>{isSetup ? 'Set your local master passcode' : 'Enter your local passcode'}</p>
+                    <h1>{isLogin ? 'Sovereign Access' : 'Establish Identity'}</h1>
+                    <p>{isLogin ? 'Enter your credentials' : 'Create your ZERO-TASK identity'}</p>
                 </header>
 
                 <form onSubmit={handleSubmit} className="auth-form">
-                    <div className="passcode-field">
-                        <input
-                            type="password"
-                            value={passcode}
-                            onChange={(e) => setPasscode(e.target.value)}
-                            placeholder={isSetup ? "Create Passcode" : "••••"}
-                            className="auth-input"
-                            autoFocus
-                            disabled={isProcessing}
-                        />
-                    </div>
-
-                    {isSetup && (
-                        <div className="passcode-field">
+                    {!isLogin && (
+                        <div className="input-field">
                             <input
-                                type="password"
-                                value={confirmPasscode}
-                                onChange={(e) => setConfirmPasscode(e.target.value)}
-                                placeholder="Confirm Passcode"
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Full Name"
                                 className="auth-input"
+                                required
                                 disabled={isProcessing}
                             />
                         </div>
                     )}
+                    <div className="input-field">
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Email Address"
+                            className="auth-input"
+                            required
+                            autoFocus
+                            disabled={isProcessing}
+                        />
+                    </div>
+                    <div className="input-field">
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Password"
+                            className="auth-input"
+                            required
+                            disabled={isProcessing}
+                        />
+                    </div>
 
                     {error && (
                         <motion.p
@@ -93,18 +107,27 @@ export const AuthScreen = ({ isSetup, onLogin, onSetup }: AuthScreenProps) => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                         >
-                            {isSetup ? 'Passcodes must match and be at least 4 digits.' : 'Access Denied. Passcode incorrect.'}
+                            {isLogin ? 'Access Denied. Invalid credentials.' : 'Registration failed. Please try again.'}
                         </motion.p>
                     )}
 
                     <button type="submit" className="auth-btn" disabled={isProcessing}>
-                        {isProcessing ? 'Verifying...' : (isSetup ? 'Secure Engine' : 'Unlock')}
+                        {isProcessing ? 'Verifying...' : (isLogin ? 'Unlock' : 'Secure Engine')}
+                    </button>
+
+                    <button
+                        type="button"
+                        className="auth-toggle"
+                        onClick={() => setIsLogin(!isLogin)}
+                        disabled={isProcessing}
+                    >
+                        {isLogin ? "Need an account? Sign Up" : "Have an account? Log In"}
                     </button>
                 </form>
 
                 <footer className="auth-footer">
-                    <p>Protected by Local Sovereignty</p>
-                    <span>No data ever leaves this device.</span>
+                    <p>Protected by System Zero Sovereignty</p>
+                    <span>Multi-user environment with centralized audit logs.</span>
                 </footer>
             </motion.div>
         </div>

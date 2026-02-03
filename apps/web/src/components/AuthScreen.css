@@ -64,10 +64,14 @@
     border-radius: var(--radius-md);
     padding: 1rem;
     color: var(--text-primary);
-    font-size: 1.2rem;
-    text-align: center;
-    letter-spacing: 4px;
+    font-size: 1rem;
+    text-align: left;
     transition: all 0.3s ease;
+}
+
+.auth-input[type="password"] {
+    letter-spacing: 0.25rem;
+    text-align: center;
 }
 
 .auth-input:focus {
@@ -107,6 +111,22 @@
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
+}
+
+.auth-toggle {
+    background: none;
+    border: none;
+    color: var(--accent-primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.auth-toggle:hover {
+    opacity: 1;
+    text-decoration: underline;
 }
 
 .auth-footer {

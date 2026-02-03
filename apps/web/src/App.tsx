@@ -25,10 +25,11 @@ function App() {
   // Initialize Auth
   const {
     isAuthenticated,
-    isSetupRequired,
     isLoading: isAuthLoading,
-    setupPasscode,
-    login
+    user,
+    signup,
+    login,
+    logout
   } = useAuth();
 
   // Initialize Audit Log
@@ -65,17 +66,20 @@ function App() {
   const isAppDataLoading = isTasksLoading || isAuditLoading || isAuthLoading;
 
   // Auth Handlers with Logging
-  const handleLogin = async (passcode: string) => {
-    const success = await login(passcode);
+  const handleLogin = async (email: string, password: string) => {
+    const success = await login(email, password);
     if (success) {
-      logAction('AUTH', 'Sovereign session authorized.');
+      logAction('AUTH', `Sovereign session authorized for ${email}.`);
     }
     return success;
   };
 
-  const handleSetup = async (passcode: string) => {
-    await setupPasscode(passcode);
-    logAction('AUTH', 'Sovereign root-of-trust established.');
+  const handleSignup = async (email: string, password: string, name: string) => {
+    const result = await signup(email, password, name);
+    if (!result.error) {
+      logAction('AUTH', `Sovereign root-of-trust established for ${name}.`);
+    }
+    return result;
   };
 
   // Derived: Filtered tasks for navigation
@@ -157,12 +161,11 @@ function App() {
   }
 
   // Auth Gate
-  if (!isAuthenticated && isSetupRequired !== null) {
+  if (!isAuthenticated) {
     return (
       <AuthScreen
-        isSetup={isSetupRequired}
         onLogin={handleLogin}
-        onSetup={handleSetup}
+        onSignup={handleSignup}
       />
     );
   }
@@ -178,6 +181,10 @@ function App() {
           </div>
         </div>
         <div className="header-actions">
+          {user && <span className="user-badge">{user.name}</span>}
+          <button onClick={() => logout()} className="logout-btn" title="Logout">
+            ⎋
+          </button>
           <ThemeToggle theme={theme} onToggle={toggleTheme} />
           <SystemControls
             tasks={tasks}

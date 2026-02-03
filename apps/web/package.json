@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "@zero-task/shared": "*",
+    "better-auth": "^1.4.18",
     "framer-motion": "^12.30.0",
+    "hono": "^4.11.7",
     "idb": "^8.0.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
