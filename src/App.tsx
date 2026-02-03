@@ -9,17 +9,32 @@ import { useState } from 'react';
 import logo from './assets/logo.svg';
 import { useTheme } from './hooks/useTheme';
 import { ThemeToggle } from './components/ThemeToggle';
+import { useAudit } from './hooks/useAudit';
+import { SystemControls } from './components/SystemControls';
 
 /**
  * Root Component (App)
  * 
  * Acts as the "Composition Root" for the application.
- * Initializes the global state (useTasks, useTheme) and passes it down
- * to child components.
+ * Initializes the global state (useTasks, useTheme, useAudit)
+ * and passes it down to child components.
  */
 function App() {
-  // Initialize State Hooks
-  const { tasks, addTask, toggleTask, deleteTask, updateTask, reorderTasks } = useTasks();
+  // Initialize Audit Log
+  const { logs, logAction, clearLogs } = useAudit();
+
+  // Initialize State Hooks (Pass logAction to useTasks)
+  const {
+    tasks,
+    addTask,
+    toggleTask,
+    deleteTask,
+    updateTask,
+    reorderTasks,
+    importTasks,
+    clearTasks
+  } = useTasks(logAction);
+
   const { theme, toggleTheme } = useTheme();
 
   // Filter state
@@ -41,6 +56,13 @@ function App() {
         </div>
         <div className="header-actions">
           <ThemeToggle theme={theme} onToggle={toggleTheme} />
+          <SystemControls
+            tasks={tasks}
+            logs={logs}
+            onImport={importTasks}
+            onClear={clearTasks}
+            onClearLogs={clearLogs}
+          />
         </div>
       </header>
 

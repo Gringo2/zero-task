@@ -228,3 +228,18 @@ RESULTS:
 Application now fulfills the 'Immersive Interaction' specify in DESIGN.md. Tasks animate smoothly on creation, deletion, and filtering. Drag-and-drop reordering is functional and persists locally.
 EXPLANATION:
 By closing the gap between documentation and reality, we maintain the integrity of the System Zero doctrine. The inclusion of physics-based animations via Framer Motion transforms the UI into a tactile instrument, reinforcing the reactive nature of the system.
+--------------------------------------------------
+
+ID: task-17-sovereignty-audit
+STATUS: COMPLETED (CURRENT)
+COMMIT: f03a52a
+DESCRIPTION: Sovereignty & Audit Milestone implementing data portability and mutation logging.
+CHANGES:
+- Created useAudit hook with localStorage persistence for action tracking.
+- Enhanced useTasks hook with onAction callback, importTasks, and clearTasks.
+- Created SystemControls component with high-fidelity glassmorphism UI.
+- Implemented JSON export/import and 'Nuke' data operations.
+RESULTS:
+Users now have total control over their data lifecycle and a high-integrity trail of system actions. Auditability is now a visible technical reality.
+EXPLANATION:
+The introduction of the System Control Engine moves ZERO-TASK from a simple utility to a true 'Sovereign Instrument'. By providing export/import tools, we ensure the user is not locked into the system, and the audit log provides proof of state history.
