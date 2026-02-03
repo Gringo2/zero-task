@@ -16,7 +16,7 @@ RUN npm install
 COPY . .
 
 # Build all packages (shared, then server/web)
-RUN npm run web:build && npm run build -w apps/server
+RUN npm run shared:build && npm run web:build && npm run build -w apps/server
 
 # Production Stage
 FROM node:20-slim

@@ -9,6 +9,7 @@
   "scripts": {
     "web:dev": "npm run dev -w apps/web",
     "web:build": "npm run build -w apps/web",
+    "shared:build": "npm run build -w packages/shared",
     "server:dev": "npm run dev -w apps/server",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
