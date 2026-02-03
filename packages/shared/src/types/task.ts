@@ -20,7 +20,7 @@ export interface TTask {
     title: string;       // Short summary
     description: string; // Detailed information
     status: TaskStatusType; // Current state of the task
-    createdAt: number;   // Timestamp (ms since epoch)
+    createdAt: string;   // ISO Timestamp
     projectId?: string;   // Associated Project ID
     assignedToId?: string; // ID of the user assigned to the task
 }

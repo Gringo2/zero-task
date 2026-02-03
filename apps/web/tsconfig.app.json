@@ -27,7 +27,16 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@zero-task/server": [
+        "../server/src/index.ts"
+      ],
+      "@zero-task/shared": [
+        "../../packages/shared/src/index.ts"
+      ]
+    }
   },
   "include": [
     "src"
